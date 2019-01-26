@@ -1,43 +1,17 @@
-class MoneroException(Exception):
+class JellyfinException(Exception):
     pass
 
-class BackendException(MoneroException):
+class JellyfinBadRequest(JellyfinException):
     pass
 
-class NoDaemonConnection(BackendException):
+class JellyfinUnauthorized(JellyfinException):
     pass
 
-class AccountException(MoneroException):
+class JellyfinForbidden(JellyfinException):
     pass
 
-class WrongAddress(AccountException):
+class JellyfinResourceNotFound(JellyfinException):
     pass
 
-class WrongPaymentId(AccountException):
-    pass
-
-class NotEnoughMoney(AccountException):
-    pass
-
-class NotEnoughUnlockedMoney(NotEnoughMoney):
-    pass
-
-class AmountIsZero(AccountException):
-    pass
-
-class TransactionNotPossible(AccountException):
-    pass
-
-class TransactionBroadcastError(BackendException):
-    def __init__(self, message, details=None):
-        self.details = details
-        super(TransactionBroadcastError, self).__init__(message)
-
-class TransactionNotFound(AccountException):
-    pass
-
-class SignatureCheckFailed(MoneroException):
-    pass
-
-class WalletIsNotDeterministic(MoneroException):
+class JellyfinServerError(JellyfinException):
     pass
