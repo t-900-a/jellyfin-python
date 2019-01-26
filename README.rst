@@ -4,11 +4,11 @@ Python Monero module
 |travis|_ |coveralls|_
 
 
-.. |travis| image:: https://travis-ci.org/emesik/monero-python.svg
+.. |travis| image:: https://travis-ci.org/tiedtoastar/jellyfin-python.svg
 .. _travis: https://travis-ci.org/tiedtoastar/jellyfin-python
 
 
-.. |coveralls| image:: https://coveralls.io/repos/github/emesik/monero-python/badge.svg
+.. |coveralls| image:: https://coveralls.io/repos/github/tiedtoastar/jellyfin-python/badge.svg
 .. _coveralls: https://coveralls.io/github/tiedtoastar/jellyfin-python
 
 
