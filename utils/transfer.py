@@ -41,7 +41,7 @@ argsparser.add_argument('--save', dest='outdir', nargs='?', default=None, const=
 argsparser.add_argument('destinations', metavar='address:amount', nargs='+', type=destpair,
     help="Destination address and amount (one or more pairs)")
 args = argsparser.parse_args()
-prio = getattr(monero.prio, args.prio.upper())
+prio = getattr(mediaServer.prio, args.prio.upper())
 
 level = logging.WARNING
 if args.verbosity == 1:

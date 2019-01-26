@@ -23,13 +23,13 @@ def find_version(*parts):
     raise RuntimeError("Unable to find version string.")
 
 
-version = find_version('monero', '__init__.py')
+version = find_version('mediaServer', '__init__.py')
 
 setup(
-    name = 'monero-python',
+    name = 'mediaServer-python',
     version = version,
     description = 'A comprehensive Python module for handling Monero cryptocurrency',
-    url = 'https://github.com/emesik/monero-python/',
+    url = 'https://github.com/emesik/mediaServer-python/',
     long_description = open('README.rst', 'rb').read().decode('utf-8'),
     install_requires = open('requirements.txt', 'r').read().splitlines(),
     tests_require=open('test_requirements.txt', 'r').read().splitlines(),
@@ -52,6 +52,6 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords = 'monero cryptocurrency',
+    keywords = 'mediaServer cryptocurrency',
     test_suite='tests',
 )
