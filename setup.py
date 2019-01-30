@@ -38,8 +38,8 @@ setup(
     ],
     packages = find_packages('.', exclude=['tests']),
     include_package_data = True,
-    author = 'Michał Sałaban',
-    author_email = 'michal@salaban.info',
+    author = 'TiedToAStar',
+    author_email = 'TiedToAStar@protonmail.com',
     license = 'BSD-3-Clause',
     classifiers = [
         'Development Status :: 1 - Alpha',
