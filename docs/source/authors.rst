@@ -1,15 +1,13 @@
 Authors
 =======
 
-* Michał Sałaban <michal@salaban.info>
-* MoneroPy Developers (``monero/base58.py`` taken from `MoneroPy`_)
+* TiedToAStar <TiedToAStar@protonmail.com>
 
-.. _MoneroPy: https://github.com/bigreddmachine/MoneroPy
 
-Acknowledgements
-----------------
+Please create a github issue if you need additional server features implemented.
 
-This project has been generously funded by the donors of Monero Forum Funding System.
-You may see the `original project submission`_.
+Encourage me to work on this project more by donating to my `Monero`_ address:
 
-.. _original project submission: https://forum.getmonero.org/8/funding-required/89298/comprehensive-python-module-for-handling-monero
+47q3TVnd79QcMLqFE2HJC5HTWDadUXtMDVavERPfeT3xFiBeqQQX6knBNALTz4aciC6pSbnLoMCHXXsQDCPV1BT7TqoqZxW
+
+.. _Monero: https://www.getmonero.org/

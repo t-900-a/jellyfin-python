@@ -12,7 +12,7 @@ Python Monero module
 .. _coveralls: https://coveralls.io/github/tiedtoastar/jellyfin-python
 
 
-A comprehensive Python module for handling Monero cryptocurrency.
+A comprehensive Jellyfin module for handling accounts and other future server properties
 
 * release 0.5
 * open source: https://github.com/emesik/monero-python

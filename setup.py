@@ -26,10 +26,10 @@ def find_version(*parts):
 version = find_version('mediaServer', '__init__.py')
 
 setup(
-    name = 'mediaServer-python',
+    name = 'jellyfin-python',
     version = version,
-    description = 'A comprehensive Python module for handling Monero cryptocurrency',
-    url = 'https://github.com/emesik/mediaServer-python/',
+    description = 'A comprehensive Jellyfin module for handling accounts and other future server properties',
+    url = 'https://github.com/tiedtoastar/jellyfin-python',
     long_description = open('README.rst', 'rb').read().decode('utf-8'),
     install_requires = open('requirements.txt', 'r').read().splitlines(),
     tests_require=open('test_requirements.txt', 'r').read().splitlines(),
@@ -42,16 +42,15 @@ setup(
     author_email = 'michal@salaban.info',
     license = 'BSD-3-Clause',
     classifiers = [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 1 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    keywords = 'mediaServer cryptocurrency',
+    keywords = 'jellyfin emby mediaserver',
     test_suite='tests',
 )
