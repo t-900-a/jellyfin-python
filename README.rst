@@ -16,10 +16,10 @@ A comprehensive Jellyfin module for handling accounts and other future server pr
 
 * release 0.1
 * open source: https://github.com/tiedtoastar/jellyfin-python
-* emby is the FREE & OPEN SOURCE media player
+* Jellyfin is the FREE & OPEN SOURCE media player
 * works with Jellyfin 10 and Emby 4.*
 * Python 3.x compatible
-* comes with `documentation`_
+* comes with documentation
 
 Copyrights
 ----------
