@@ -197,7 +197,14 @@ class ServerTestCase(unittest.TestCase):
     @patch('mediaServer.server.requests.post')
     def test_logout(self, mock_post):
         result = mock_post.return_value.status_code = 204
-        self.testServer.logout(userId=self.testUser.Id, AccessToken=self.testUser.AccessToken)
+        self.testServer.logoutuser(userId=self.testUser.Id, AccessToken=self.testUser.AccessToken)
+        self.assertTrue(result)
+        self.assertIsNone(self.testUser.AccessToken)
+
+    @patch('mediaServer.server.requests.post')
+    def test_deleteuser(self, mock_post):
+        result = mock_post.return_value.status_code = 204
+        self.testServer.deleteuser(userId=self.testUser.Id, AccessToken=self.testUser.AccessToken)
         self.assertTrue(result)
         self.assertIsNone(self.testUser.AccessToken)
 

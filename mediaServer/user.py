@@ -37,7 +37,10 @@ class User(object):
             self.server = server
 
     def logout(self):
-        self.server.logout(userId=self.Id, AccessToken=self.AccessToken)
+        self.server.logoutuser(userId=self.Id, AccessToken=self.AccessToken)
+
+    def delete(self):
+        self.server.deleteuser(userId=self.Id)
 
     def authenticate(self, password):
         getuser = self.server.authenticatebyname(self.Name, password=password)

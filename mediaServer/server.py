@@ -72,7 +72,7 @@ class MediaServer(object):
                 _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
         return self.userHelper.toUserObj(dictUser=dictUser)
 
-    def logout(self, userId, AccessToken):
+    def logoutuser(self, userId, AccessToken):
         method = '/Sessions/Logout'
         xEmbyAuth = {'X-Emby-Authorization': 'Emby UserId="{UserId}", Client="{Client}", Device="{Device}", DeviceId="{DeviceId}", Version="{Version}", Token="{Token}"'.format(
             UserId=userId,
@@ -101,6 +101,18 @@ class MediaServer(object):
         newuser = self.userHelper.toUserObj(dictUser=dictUser)
         newuser.server = self
         return newuser
+
+    def deleteuser(self, userId):
+        method = '/Users/{Id}'.format(Id=userId)
+        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
+        try:
+            response = self.server_delete(hdr=tokenHeader, method=method)
+            return True
+        except Exception as e:
+            _log.warning('host: %s userId: %s User Deletion Failed' % (self.url, userId))
+            _log.critical(type(e))
+            _log.critical(e.args)
+            _log.critical(e)
 
     def updateuser(self, user):
         if user.AccessToken is None:
@@ -135,6 +147,38 @@ class MediaServer(object):
             data = data
         ))
         rsp = requests.post(self.url+method, headers=hdr, data=json.dumps(data))
+
+        if rsp.status_code == 400:
+            raise exceptions.JellyfinBadRequest(rsp.content)
+        if rsp.status_code == 401:
+            raise exceptions.JellyfinUnauthorized(rsp.content)
+        if rsp.status_code == 403:
+            raise exceptions.JellyfinForbidden(rsp.content)
+        if rsp.status_code == 404:
+            raise exceptions.JellyfinResourceNotFound(rsp.content)
+        if rsp.status_code >= 500 and rsp.status_code < 600:
+            raise exceptions.JellyfinServerError(rsp.content)
+        if rsp.status_code != 200 and rsp.status_code != 204:
+            raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
+                code=rsp.status_code,
+                method=method
+            ))
+        if rsp.content != b'':
+            result = rsp.json()
+        else:
+            result = rsp.status_code
+        _ppresult = pprint.pformat(result)
+        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        return result
+
+    def server_delete(self, hdr, method):
+        hdr = {'accept': '*/*', **hdr}
+        _log.critical(u"Method: {method}\nHeaders:\n{headers}".format(
+            method=method,
+            headers=hdr
+        ))
+
+        rsp = requests.delete(url=self.url+method, headers=hdr)
 
         if rsp.status_code == 400:
             raise exceptions.JellyfinBadRequest(rsp.content)

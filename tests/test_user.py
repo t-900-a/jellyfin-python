@@ -14,6 +14,10 @@ class UserTestCase(unittest.TestCase):
         #unit test completed within test_server
         pass
 
+    def test_delete(self):
+        #unit test completed within test_server
+        pass
+
     def test_authenticate(self):
         #unit test completed within test_server
         pass
