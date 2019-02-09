@@ -179,12 +179,23 @@ class ServerTestCase(unittest.TestCase):
         self.assertIsInstance(self.testUser, User)
         self.assertEqual(self.testUser.Name, 'success')
 
-    def test_updateuser(self):
-        #TODO test_updateuser : this function nor testing has been completed
+    @patch('mediaServer.server.requests.post')
+    def test_updateuserconfig(self, mock_post):
+        result = mock_post.return_value.status_code = 204
         updatedUser = self.testUser
-        updatedUser.HasConfiguredPassword = 'True'
-        #self.testServer.updateuser(updatedUser)
-        pass
+        updatedUser.Configuration.EnableNextEpisodeAutoPlay = False
+        self.testServer.updateuserconfig(updatedUser)
+        # in a live environment we would do this self.assertEqual(updatedUser.Configuration.EnableNextEpisodeAutoPlay, serveruser.Configuration.EnableNextEpisodeAutoPlay)
+        self.assertTrue(result)
+
+    @patch('mediaServer.server.requests.post')
+    def test_updateuserpolicy(self, mock_post):
+        result = mock_post.return_value.status_code = 204
+        updatedUser = self.testUser
+        updatedUser.Policy.IsHidden = True
+        self.testServer.updateuserpolicy(updatedUser)
+        # in a live environment we would do this self.assertEqual(updatedUser.Policy.IsHidden, serveruser.Policy.IsHidden)
+        self.assertTrue(result)
 
     @patch('mediaServer.server.requests.post')
     def test_updateuserpassword(self, mock_post):
@@ -197,14 +208,14 @@ class ServerTestCase(unittest.TestCase):
     @patch('mediaServer.server.requests.post')
     def test_logout(self, mock_post):
         result = mock_post.return_value.status_code = 204
-        self.testServer.logoutuser(userId=self.testUser.Id, AccessToken=self.testUser.AccessToken)
+        self.testServer.logoutuser(userId=self.testUser.Id)
         self.assertTrue(result)
         self.assertIsNone(self.testUser.AccessToken)
 
     @patch('mediaServer.server.requests.post')
     def test_deleteuser(self, mock_post):
         result = mock_post.return_value.status_code = 204
-        self.testServer.deleteuser(userId=self.testUser.Id, AccessToken=self.testUser.AccessToken)
+        self.testServer.deleteuser(userId=self.testUser.Id)
         self.assertTrue(result)
         self.assertIsNone(self.testUser.AccessToken)
 

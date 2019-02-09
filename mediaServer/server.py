@@ -72,7 +72,7 @@ class MediaServer(object):
                 _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
         return self.userHelper.toUserObj(dictUser=dictUser)
 
-    def logoutuser(self, userId, AccessToken):
+    def logoutuser(self, userId):
         method = '/Sessions/Logout'
         xEmbyAuth = {'X-Emby-Authorization': 'Emby UserId="{UserId}", Client="{Client}", Device="{Device}", DeviceId="{DeviceId}", Version="{Version}", Token="{Token}"'.format(
             UserId=userId,
@@ -80,7 +80,7 @@ class MediaServer(object):
             Device=socket.gethostname(),
             DeviceId=hash(socket.gethostname()),
             Version=__version__,
-            Token= (AccessToken if AccessToken else '')
+            Token= self.adminUser.AccessToken
         )}
         try:
             response = self.server_request(hdr=xEmbyAuth, method=method, data=None)
@@ -114,13 +114,35 @@ class MediaServer(object):
             _log.critical(e.args)
             _log.critical(e)
 
-    def updateuser(self, user):
-        if user.AccessToken is None:
-            _log.error(__class__+'.updateuser requires an AccessToken before '+user.Name+' can be updated.')
-        method = '/Users/{Id}'.format(Id=user.Id)
-        tokenHeader = {'X-Emby-Token': user.AccessToken}
-        data = self.userHelper.todictUser(userObj=user)
-        #TODO update the user
+    def updateuserpolicy(self, user):
+        if self.adminUser.AccessToken is None:
+            _log.error(__class__+'.updateuserpolicy requires an admins AccessToken before '+user.Name+' can be updated.')
+        method = '/Users/{Id}/Policy'.format(Id=user.Id)
+        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
+        data = self.userHelper.todictPolicy(policyObj=user.Policy)
+        try:
+            response = self.server_request(hdr=tokenHeader, method=method, data=data)
+            return True
+        except Exception as e:
+            _log.warning('host: %s userId: %s User Policy Update Failed' % (self.url, userId))
+            _log.critical(type(e))
+            _log.critical(e.args)
+            _log.critical(e)
+
+    def updateuserconfig(self, user):
+        if self.adminUser.AccessToken is None:
+            _log.error(__class__+'.updateuserconfig requires an admins AccessToken before '+user.Name+' can be updated.')
+        method = '/Users/{Id}/Configuration'.format(Id=user.Id)
+        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
+        data = self.userHelper.todictConfig(configObj=user.Configuration)
+        try:
+            response = self.server_request(hdr=tokenHeader, method=method, data=data)
+            return True
+        except Exception as e:
+            _log.warning('host: %s userId: %s User Config Update Failed' % (self.url, userId))
+            _log.critical(type(e))
+            _log.critical(e.args)
+            _log.critical(e)
 
     def updateuserpassword(self, AccessToken, userId, currentPw, newPw):
         if AccessToken is None:

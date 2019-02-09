@@ -37,7 +37,7 @@ class User(object):
             self.server = server
 
     def logout(self):
-        self.server.logoutuser(userId=self.Id, AccessToken=self.AccessToken)
+        self.server.logoutuser(userId=self.Id)
 
     def delete(self):
         self.server.deleteuser(userId=self.Id)

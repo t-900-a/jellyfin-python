@@ -79,3 +79,11 @@ class UserHelper(object):
         dictUser['Policy'] = userObj.Policy.__dict__
         dictUser['Configuration'] = userObj.Configuration.__dict__
         return dictUser
+
+    def todictPolicy(self, policyObj):
+        dictPolicy = policyObj.__dict__
+        return dictPolicy
+
+    def todictConfig(self, configObj):
+        dictConfig = configObj.__dict__
+        return dictConfig
