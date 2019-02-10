@@ -161,6 +161,25 @@ class MediaServer(object):
             _log.critical(inst)
             _log.debug("Password update failed for user id: {user}".format(user=userId))
 
+    def getusers(self, IsHidden=None, IsDisabled=None, IsGuest=None):
+        method = '/Users?IsHidden={IsHidden}&IsDisabled={IsDisabled}&IsGuest={IsGuest}'\
+            .format(IsHidden=IsHidden, IsDisabled=IsDisabled, IsGuest=IsGuest)
+        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
+        try:
+            dictUsers = self.server_request(hdr=tokenHeader,method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve users from server: {server}".format(server=self.url))
+
+        serverusers = []
+        for dictUser in dictUsers:
+            serverusers.append(self.userHelper.toUserObj(dictUser=dictUser))
+
+        return serverusers
+
+
     def server_request(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
         _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(

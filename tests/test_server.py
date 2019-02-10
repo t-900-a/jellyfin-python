@@ -14,6 +14,190 @@ class ServerTestCase(unittest.TestCase):
     cfg_test = None
     testServer = None
     testUser = None
+    getusers_response = [
+                          {
+                            "Name": "additionaluser",
+                            "ServerId": "60b8fc43b399400ea04e9e6cbd7a1f59",
+                            "Id": "120caf4da6544b90ad61e546af9bb72e",
+                            "HasPassword": 'false',
+                            "HasConfiguredPassword": 'false',
+                            "HasConfiguredEasyPassword": 'false',
+                            "Configuration": {
+                              "PlayDefaultAudioTrack": 'true',
+                              "DisplayMissingEpisodes": 'false',
+                              "GroupedFolders": [],
+                              "SubtitleMode": "Default",
+                              "DisplayCollectionsView": 'false',
+                              "EnableLocalPassword": 'false',
+                              "OrderedViews": [],
+                              "LatestItemsExcludes": [],
+                              "MyMediaExcludes": [],
+                              "HidePlayedInLatest": 'true',
+                              "RememberAudioSelections": 'true',
+                              "RememberSubtitleSelections": 'true',
+                              "EnableNextEpisodeAutoPlay": 'true'
+                            },
+                            "Policy": {
+                              "IsAdministrator": 'false',
+                              "IsHidden": 'false',
+                              "IsDisabled": 'false',
+                              "BlockedTags": [],
+                              "EnableUserPreferenceAccess": 'true',
+                              "AccessSchedules": [],
+                              "BlockUnratedItems": [],
+                              "EnableRemoteControlOfOtherUsers": 'false',
+                              "EnableSharedDeviceControl": 'true',
+                              "EnableRemoteAccess": 'true',
+                              "EnableLiveTvManagement": 'true',
+                              "EnableLiveTvAccess": 'true',
+                              "EnableMediaPlayback": 'true',
+                              "EnableAudioPlaybackTranscoding": 'true',
+                              "EnableVideoPlaybackTranscoding": 'true',
+                              "EnablePlaybackRemuxing": 'true',
+                              "EnableContentDeletion": 'false',
+                              "EnableContentDeletionFromFolders": [],
+                              "EnableContentDownloading": 'true',
+                              "EnableSubtitleDownloading": 'false',
+                              "EnableSubtitleManagement": 'false',
+                              "EnableSyncTranscoding": 'true',
+                              "EnableMediaConversion": 'true',
+                              "EnabledDevices": [],
+                              "EnableAllDevices": 'true',
+                              "EnabledChannels": [],
+                              "EnableAllChannels": 'true',
+                              "EnabledFolders": [],
+                              "EnableAllFolders": 'true',
+                              "InvalidLoginAttemptCount": 0,
+                              "EnablePublicSharing": 'true',
+                              "RemoteClientBitrateLimit": 0,
+                              "ExcludedSubFolders": [],
+                              "DisablePremiumFeatures": 'false'
+                            }
+                          },
+                          {
+                            "Name": "MyEmbyUser",
+                            "ServerId": "60b8fc43b399400ea04e9e6cbd7a1f59",
+                            "Id": "3b55ac5646364a45b2d017f5b4be8cfb",
+                            "HasPassword": 'false',
+                            "HasConfiguredPassword": 'false',
+                            "HasConfiguredEasyPassword": 'false',
+                            "LastLoginDate": "2019-02-09T22:56:46.7788654+00:00",
+                            "LastActivityDate": "2019-02-09T23:31:08.3019870+00:00",
+                            "Configuration": {
+                              "PlayDefaultAudioTrack": 'true',
+                              "DisplayMissingEpisodes": 'false',
+                              "GroupedFolders": [],
+                              "SubtitleMode": "Default",
+                              "DisplayCollectionsView": 'false',
+                              "EnableLocalPassword": 'false',
+                              "OrderedViews": [],
+                              "LatestItemsExcludes": [],
+                              "MyMediaExcludes": [],
+                              "HidePlayedInLatest": 'true',
+                              "RememberAudioSelections": 'true',
+                              "RememberSubtitleSelections": 'true',
+                              "EnableNextEpisodeAutoPlay": 'true'
+                            },
+                            "Policy": {
+                              "IsAdministrator": 'true',
+                              "IsHidden": 'false',
+                              "IsDisabled": 'false',
+                              "BlockedTags": [],
+                              "EnableUserPreferenceAccess": 'true',
+                              "AccessSchedules": [],
+                              "BlockUnratedItems": [],
+                              "EnableRemoteControlOfOtherUsers": 'true',
+                              "EnableSharedDeviceControl": 'true',
+                              "EnableRemoteAccess": 'true',
+                              "EnableLiveTvManagement": 'true',
+                              "EnableLiveTvAccess": 'true',
+                              "EnableMediaPlayback": 'true',
+                              "EnableAudioPlaybackTranscoding": 'true',
+                              "EnableVideoPlaybackTranscoding": 'true',
+                              "EnablePlaybackRemuxing": 'true',
+                              "EnableContentDeletion": 'true',
+                              "EnableContentDeletionFromFolders": [],
+                              "EnableContentDownloading": 'true',
+                              "EnableSubtitleDownloading": 'true',
+                              "EnableSubtitleManagement": 'true',
+                              "EnableSyncTranscoding": 'true',
+                              "EnableMediaConversion": 'true',
+                              "EnabledDevices": [],
+                              "EnableAllDevices": 'true',
+                              "EnabledChannels": [],
+                              "EnableAllChannels": 'true',
+                              "EnabledFolders": [],
+                              "EnableAllFolders": 'true',
+                              "InvalidLoginAttemptCount": 0,
+                              "EnablePublicSharing": 'true',
+                              "RemoteClientBitrateLimit": 0,
+                              "AuthenticationProviderId": "Emby.Server.Implementations.Library.DefaultAuthenticationProvider",
+                              "ExcludedSubFolders": [],
+                              "DisablePremiumFeatures": 'false'
+                            }
+                          },
+                          {
+                            "Name": "success",
+                            "ServerId": "60b8fc43b399400ea04e9e6cbd7a1f59",
+                            "Id": "5c9ea641b9784a0b8a3af1898a24904d",
+                            "HasPassword": 'false',
+                            "HasConfiguredPassword": 'false',
+                            "HasConfiguredEasyPassword": 'false',
+                            "Configuration": {
+                              "PlayDefaultAudioTrack": 'true',
+                              "DisplayMissingEpisodes": 'false',
+                              "GroupedFolders": [],
+                              "SubtitleMode": "Default",
+                              "DisplayCollectionsView": 'false',
+                              "EnableLocalPassword": 'false',
+                              "OrderedViews": [],
+                              "LatestItemsExcludes": [],
+                              "MyMediaExcludes": [],
+                              "HidePlayedInLatest": 'true',
+                              "RememberAudioSelections": 'true',
+                              "RememberSubtitleSelections": 'true',
+                              "EnableNextEpisodeAutoPlay": 'true'
+                            },
+                            "Policy": {
+                              "IsAdministrator": 'false',
+                              "IsHidden": 'false',
+                              "IsDisabled": 'false',
+                              "BlockedTags": [],
+                              "EnableUserPreferenceAccess": 'true',
+                              "AccessSchedules": [],
+                              "BlockUnratedItems": [],
+                              "EnableRemoteControlOfOtherUsers": 'false',
+                              "EnableSharedDeviceControl": 'true',
+                              "EnableRemoteAccess": 'true',
+                              "EnableLiveTvManagement": 'true',
+                              "EnableLiveTvAccess": 'true',
+                              "EnableMediaPlayback": 'true',
+                              "EnableAudioPlaybackTranscoding": 'true',
+                              "EnableVideoPlaybackTranscoding": 'true',
+                              "EnablePlaybackRemuxing": 'true',
+                              "EnableContentDeletion": 'false',
+                              "EnableContentDeletionFromFolders": [],
+                              "EnableContentDownloading": 'true',
+                              "EnableSubtitleDownloading": 'false',
+                              "EnableSubtitleManagement": 'false',
+                              "EnableSyncTranscoding": 'true',
+                              "EnableMediaConversion": 'true',
+                              "EnabledDevices": [],
+                              "EnableAllDevices": 'true',
+                              "EnabledChannels": [],
+                              "EnableAllChannels": 'true',
+                              "EnabledFolders": [],
+                              "EnableAllFolders": 'true',
+                              "InvalidLoginAttemptCount": 0,
+                              "EnablePublicSharing": 'true',
+                              "RemoteClientBitrateLimit": 0,
+                              "ExcludedSubFolders": [],
+                              "DisablePremiumFeatures": 'false'
+                            }
+                          }
+                        ]
+
+
     authenticateadminuserbyname_response = {"User":
                             {"Name":"MyEmbyUser",
                              "ServerId":"73719e7c60fc423c840d7a49065472ab",
@@ -218,6 +402,15 @@ class ServerTestCase(unittest.TestCase):
         self.testServer.deleteuser(userId=self.testUser.Id)
         self.assertTrue(result)
         self.assertIsNone(self.testUser.AccessToken)
+
+    @patch('mediaServer.server.requests.post')
+    def test_getusers(self, mock_post):
+        result = mock_post.return_value.status_code = 204
+        mock_post.return_value.json.return_value = self.getusers_response
+        users = self.testServer.getusers()
+        #print(users)
+        pass
+
 
     def test_authenticate(self):
         #untested
