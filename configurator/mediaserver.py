@@ -56,7 +56,7 @@ class mediaServer_config(object):
             self.protocol = input("Specify protocol (Default:http): ")
             if self.protocol != 'http' and self.protocol != 'https':
                 self.protocol = 'http'
-                self.host = input("Specify host (Default: 127.0.0.1): ")
+            self.host = input("Specify host (Default: 127.0.0.1): ")
             if not self.host:
                 self.host = '127.0.0.1'
             self.port = input("Specify port (Default: 8096): ")
