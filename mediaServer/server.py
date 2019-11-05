@@ -71,6 +71,18 @@ class MediaServer(object):
             if type(e) == exceptions.JellyfinUnauthorized:
                 _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
         return self.userHelper.toUserObj(dictUser=dictUser)
+    
+    def getApiKeys(self):
+        method = '/Auth/Keys'
+        xEmbyAuth = {'X-Emby-Authorization': 'Token="{Token}"'.format(
+            Token=self.adminUser.AccessToken
+        )}
+        try:
+            response = self.server_getrequest(hdr=xEmbyAuth, method=method, data=None)
+            return response['Items']
+        except Exception as e:
+            _log.warning('host: %s API Key Retrieval Failed' % (self.url))
+            return []
 
     def logoutuser(self, userId):
         method = '/Sessions/Logout'
