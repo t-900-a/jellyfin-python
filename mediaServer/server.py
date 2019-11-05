@@ -192,6 +192,23 @@ class MediaServer(object):
             serverusers.append(self.userHelper.toUserObj(dictUser=dictUser))
 
         return serverusers
+    
+    def customsql(self, query = str(''), usernamesNotIds = str('')):
+        method = '/user_usage_stats/submit_custom_query'
+        data = {'CustomQueryString': '"{Query}"', 'ReplaceUserId': '"{replace}"'.format(
+            Query = query,
+            replace = usernameNotIds
+        )}
+        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
+        try:
+            results = self.server_getrequest(hdr=tokenHeader, method=method, data=data)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve results of custom query from server: {server} \nQuery: {customQuery}".format(server=self.url, customQuery=query))
+            
+        return results
         
     def server_request(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
