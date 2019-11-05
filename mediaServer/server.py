@@ -29,6 +29,9 @@ class MediaServer(object):
             port=self.serverConfig.port,
             path=self.serverConfig.path)
         self.authenticateasadmin()
+        
+    def tokenHeader(self):
+        return {'X-Emby-Token:' self.adminUser.AccessToken}
 
     def authenticateasadmin(self):
         self.adminUser = User(Name=self.serverConfig.user, server=self)
@@ -106,9 +109,8 @@ class MediaServer(object):
 
     def createuserbyname(self, username):
         method = '/Users/New'
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         data = {'Name': username}
-        dictUser = self.server_request(hdr=tokenHeader, method=method, data=data)
+        dictUser = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
         _log.info('New user account created: {username}'.format(username=username))
         newuser = self.userHelper.toUserObj(dictUser=dictUser)
         newuser.server = self
@@ -116,9 +118,8 @@ class MediaServer(object):
 
     def deleteuser(self, userId):
         method = '/Users/{Id}'.format(Id=userId)
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         try:
-            response = self.server_delete(hdr=tokenHeader, method=method)
+            response = self.server_delete(hdr=self.tokenHeader(), method=method)
             return True
         except Exception as e:
             _log.warning('host: %s userId: %s User Deletion Failed' % (self.url, userId))
@@ -130,10 +131,9 @@ class MediaServer(object):
         if self.adminUser.AccessToken is None:
             _log.error(__class__+'.updateuserpolicy requires an admins AccessToken before '+user.Name+' can be updated.')
         method = '/Users/{Id}/Policy'.format(Id=user.Id)
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         data = self.userHelper.todictPolicy(policyObj=user.Policy)
         try:
-            response = self.server_request(hdr=tokenHeader, method=method, data=data)
+            response = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
             return True
         except Exception as e:
             _log.warning('host: %s userId: %s User Policy Update Failed' % (self.url, userId))
@@ -145,10 +145,9 @@ class MediaServer(object):
         if self.adminUser.AccessToken is None:
             _log.error(__class__+'.updateuserconfig requires an admins AccessToken before '+user.Name+' can be updated.')
         method = '/Users/{Id}/Configuration'.format(Id=user.Id)
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         data = self.userHelper.todictConfig(configObj=user.Configuration)
         try:
-            response = self.server_request(hdr=tokenHeader, method=method, data=data)
+            response = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
             return True
         except Exception as e:
             _log.warning('host: %s userId: %s User Config Update Failed' % (self.url, userId))
@@ -178,9 +177,8 @@ class MediaServer(object):
             .format(Hidden=IsHidden,
                      Disabled=IsDisabled,
                      Guest=IsGuest)
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         try:
-            dictUsers = self.server_getrequest(hdr=tokenHeader, method=method)
+            dictUsers = self.server_getrequest(hdr=self.tokenHeader(), method=method)
         except Exception as inst:
             _log.critical(type(inst))
             _log.critical(inst.args)
@@ -193,15 +191,189 @@ class MediaServer(object):
 
         return serverusers
     
+    def getlibraryinfo(self):
+        info = {}
+        method = '/Items/Counts'
+        try:
+            info = self.server_getrequest(hdr=self.tokenHeader(), method=method)
+            method = '/Library/MediaFolders'
+            info['Items'] = self.server_getrequest(hdr=self.tokenHeader(), method=method)['Items']
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve library counts from server: {server}".format(server=self.url))
+        
+        return info
+    
+    def searchMovie(self, name, year = 0, itemId = 0, metadataLang = '', metadataCountyCode = ''):
+        method = '/Items/RemoteSearch/Movie'
+        data = {
+            "SearchInfo": {
+                "Name": name,
+                "MetadataLanguage": metadataLang,
+                "MetadataCountryCode": metadataCountyCode,
+                "ProviderIds": {
+                  "additionalProp1": "",
+                  "additionalProp2": "",
+                  "additionalProp3": ""
+                },
+                "Year": year,
+                "IndexNumber": 0,
+                "ParentIndexNumber": 0,
+                "PremiereDate": "",
+                "IsAutomated": true
+            },
+            "ItemId": itemId,
+            "SearchProviderName": "",
+            "IncludeDisabledProviders": true
+        }
+        try:
+            results = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve movie search results from server: {server}".format(server=self.url))
+            
+        return results
+    
+    def searchTv(self, name, year = 0, airDate = "", itemId = 0, metadataLang = '', metadataCountyCode = ''):
+        method = '/Items/RemoteSearch/Series'
+        data = {
+            "SearchInfo": {
+                "EpisodeAirDate": airDate,
+                "Name": name,
+                "MetadataLanguage": metadataLang,
+                "MetadataCountryCode": metadataCountyCode,
+                "ProviderIds": {
+                  "additionalProp1": "",
+                  "additionalProp2": "",
+                  "additionalProp3": ""
+                },
+                "Year": year,
+                "IndexNumber": 0,
+                "ParentIndexNumber": 0,
+                "PremiereDate": "",
+                "IsAutomated": true
+            },
+            "ItemId": itemId,
+            "SearchProviderName": "",
+            "IncludeDisabledProviders": true
+        }
+        try:
+            results = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve movie search results from server: {server}".format(server=self.url))
+            
+        return results
+    
+    def searchAlbum(self, albumName, artistNames = [], songName = "", year = 0, itemId = 0, metadataLang = '', metadataCountyCode = ''):
+        method = '/Items/RemoteSearch/MusicAlbum'
+        data = {
+            "SearchInfo": {
+                "AlbumArtists": artistNames,
+                "SongInfos": [
+                    {
+                        "AlbumArtists": artistNames,
+                        "Album": albumName,
+                        "Artists": artistNames,
+                        "Name": songName,
+                        "MetadataLanguage": metadataLang,
+                        "MetadataCountryCode": metadataCountyCode,
+                        "ProviderIds": {
+                          "additionalProp1": "",
+                          "additionalProp2": "",
+                          "additionalProp3": ""
+                        },
+                        "Year": year,
+                        "IndexNumber": 0,
+                        "ParentIndexNumber": 0,
+                        "PremiereDate": "",
+                        "IsAutomated": true
+                    }
+                ]
+                "Name": albumName,
+                "MetadataLanguage": metadataLang,
+                "MetadataCountryCode": metadataCountyCode,
+                "ProviderIds": {
+                  "additionalProp1": "",
+                  "additionalProp2": "",
+                  "additionalProp3": ""
+                },
+                "Year": year,
+                "IndexNumber": 0,
+                "ParentIndexNumber": 0,
+                "PremiereDate": "",
+                "IsAutomated": true
+            },
+            "ItemId": itemId,
+            "SearchProviderName": "",
+            "IncludeDisabledProviders": true
+        }
+        try:
+            results = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve movie search results from server: {server}".format(server=self.url))
+            
+        return results
+    
+    def searchArtist(self, name, year = 0, itemId = 0, metadataLang = '', metadataCountyCode = ''):
+        method = '/Items/RemoteSearch/MusicArtist'
+        data = {
+            "SearchInfo": {
+                "Name": name,
+                "MetadataLanguage": metadataLang,
+                "MetadataCountryCode": metadataCountyCode,
+                "ProviderIds": {
+                  "additionalProp1": "",
+                  "additionalProp2": "",
+                  "additionalProp3": ""
+                },
+                "Year": year,
+                "IndexNumber": 0,
+                "ParentIndexNumber": 0,
+                "PremiereDate": "",
+                "IsAutomated": true
+            },
+            "ItemId": itemId,
+            "SearchProviderName": "",
+            "IncludeDisabledProviders": true
+        }
+        try:
+            results = self.server_request(hdr=self.tokenHeader(), method=method, data=data)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve movie search results from server: {server}".format(server=self.url))
+            
+        return results
+    
+    def search(self, keyword, year = 0, airDate = '', itemId = 0, metadataLang = '', metadataCountyCode = ''):
+        results = {}
+        results['Movies'] = self.searchMovie(keyword, year, itemId, metadataLang, metadataCountryCode)
+        results['Series'] = self.searchTv(keyword, year, airDate, itemId, metadataLang, metadataCountryCode)
+        results['Albums'] = self.searchAlbum(albumName = keyword, year=year, itemId = itemId, metadataLang = metadataLang, metadataCountryCode = metadataCountryCode) # keyword is album name
+        results['Albums'].update(self.searchAlbum(artistNames = [keyword], year=year, itemId = itemId, metadataLang = metadataLang, metadataCountryCode = metadataCountryCode)) # keyword is artist name
+        results['Artists'] = self.searchArtist(keyword, year, itemId, metadataLang, metadataCountryCode)
+        
+        return results
+    
     def customsql(self, query = str(''), usernamesNotIds = str('')):
         method = '/user_usage_stats/submit_custom_query'
         data = {'CustomQueryString': '"{Query}"', 'ReplaceUserId': '"{replace}"'.format(
             Query = query,
             replace = usernameNotIds
         )}
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         try:
-            results = self.server_getrequest(hdr=tokenHeader, method=method, data=data)
+            results = self.server_getrequest(hdr=self.tokenHeader(), method=method, data=data)
         except Exception as inst:
             _log.critical(type(inst))
             _log.critical(inst.args)
@@ -212,9 +384,8 @@ class MediaServer(object):
     
     def info(self):
         method = '/System/Info'
-        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
         try:
-            info = self.server_getrequest(hdr=tokenHeader, method=method)
+            info = self.server_getrequest(hdr=self.tokenHeader(), method=method)
         except Exception as inst:
             _log.critical(type(inst))
             _log.critical(inst.args)
@@ -228,6 +399,22 @@ class MediaServer(object):
         if info:
             return True
         else:
+            return False
+        
+    def restart(self):
+        method = '/System/Restart'
+        try:
+            response = self.server_request(hdr=self.tokenHeader(), method=method)
+            return True
+        except exceptions as e:
+            return False
+        
+   def shutdown(self):
+        method = '/System/Shutdown'
+        try:
+            response = self.server_request(hdr=self.tokenHeader(), method=method)
+            return True
+        except exceptions as e:
             return False
         
     def server_request(self, hdr, method, data=None):
