@@ -209,6 +209,26 @@ class MediaServer(object):
             _log.debug("Cannot retrieve results of custom query from server: {server} \nQuery: {customQuery}".format(server=self.url, customQuery=query))
             
         return results
+    
+    def info(self):
+        method = '/System/Info'
+        tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
+        try:
+            info = self.server_getrequest(hdr=tokenHeader, method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot get info for server: {server}".format(server=self.url))
+        
+        return info
+    
+    def ping(self):
+        info = self.info() # '/System/Ping' not working for some reason
+        if info:
+            return True
+        else:
+            return False
         
     def server_request(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
