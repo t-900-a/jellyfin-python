@@ -72,7 +72,7 @@ class MediaServer(object):
                 _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
         return self.userHelper.toUserObj(dictUser=dictUser)
     
-    def getApiKeys(self):
+    def getapikeys(self):
         method = '/Auth/Keys'
         xEmbyAuth = {'X-Emby-Authorization': 'Token="{Token}"'.format(
             Token=self.adminUser.AccessToken
@@ -192,7 +192,7 @@ class MediaServer(object):
             serverusers.append(self.userHelper.toUserObj(dictUser=dictUser))
 
         return serverusers
-
+        
     def server_request(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
         _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
