@@ -33,7 +33,7 @@ Copyright (c) 2019 TiedToAStar <TiedToAStar@protonmail.com>
 Want to help?
 -------------
 
-If you find this project useful, please consider a donation to the following address:
+If you find this project useful, please consider a donation to the following Monero address:
 ``47q3TVnd79QcMLqFE2HJC5HTWDadUXtMDVavERPfeT3xFiBeqQQX6knBNALTz4aciC6pSbnLoMCHXXsQDCPV1BT7TqoqZxW``
 
 
