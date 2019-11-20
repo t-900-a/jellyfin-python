@@ -4,6 +4,7 @@ from mediaServer.user import User
 # from __init__ import __version__
 __version__ = 1
 from . import exceptions
+from .exceptions import *
 import requests
 import socket
 import json
@@ -59,10 +60,9 @@ class MediaServer(object):
             self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
             if dictUser['User']['Policy']['isAdministrator'] == 'true':
                 adminUserId = dictUser['User']['Id']
-        except Exception as e:
-            if type(e) == exceptions.JellyfinUnauthorized:
-                _log.warning('host: %s username: %s Authentication Failed' % (self.url, username))
-        return self.userHelper.toUserObj(dictUser=dictUser)
+            return self.userHelper.toUserObj(dictUser=dictUser)
+        except JellyfinUnauthorized as e:
+            _log.warning('host: %s username: %s Authentication Failed' % (self.url, username))
 
     def authenticate(self, userid, password):
         # TODO manual testing then unit testing
@@ -77,10 +77,9 @@ class MediaServer(object):
             self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
             if dictUser['User']['Policy']['isAdministrator'] == 'true':
                 adminUserId = dictUser['User']['Id']
-        except exceptions as e:
-            if type(e) == exceptions.JellyfinUnauthorized:
-                _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
-        return self.userHelper.toUserObj(dictUser=dictUser)
+            return self.userHelper.toUserObj(dictUser=dictUser)
+        except JellyfinUnauthorized as e:
+            _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
 
     def getAdmin(self):
         return adminUser
@@ -317,7 +316,7 @@ def shutdown(self):
     try:
         response = self.server_request(hdr=self.tokenHeader, method=method)
         return True
-    except exceptions as e:
+    except Exception as e:
         return False
 
 
