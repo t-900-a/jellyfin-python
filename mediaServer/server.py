@@ -59,7 +59,7 @@ class MediaServer(object):
             self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
             if dictUser['User']['Policy']['isAdministrator'] == 'true':
                 adminUserId = dictUser['User']['Id']
-        except exceptions as e:
+        except Exception as e:
             if type(e) == exceptions.JellyfinUnauthorized:
                 _log.warning('host: %s username: %s Authentication Failed' % (self.url, username))
         return self.userHelper.toUserObj(dictUser=dictUser)
