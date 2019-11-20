@@ -223,7 +223,7 @@ class MediaServer(object):
     def search(self, Name='', Ids='', FolderName='', Years='', IsPlayed='', Artists='', Albums='', Person='',
                Studios='', MinPremiereDate='', MaxPremiereDate='', MaxMPAARating='', MinCommunityRating='',
                MinCriticRating='', IsHD='', Is3D='', IsMissing='', IsUnaired='',
-               Fields=[ParentId, DateCreated, SortName], ExcludeItemTypes='', SortBy='', SortOrder='Descending',
+               Fields=['ParentId', 'DateCreated', 'SortName'], ExcludeItemTypes='', SortBy='', SortOrder='Descending',
                Limit=''):
         folderId = ''
         try:
