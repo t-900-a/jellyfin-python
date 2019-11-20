@@ -9,6 +9,7 @@ class mediaServer_config(object):
     host = '127.0.0.1'
     port = '8096'
     path = '/emby'
+    #this is the admin user and password
     user = 'MyEmbyUser'
     password = ''
 

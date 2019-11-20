@@ -36,7 +36,8 @@ class MediaServer(object):
 
     def authenticateasadmin(self):
         self.adminUser = User(Name=self.serverConfig.user, server=self)
-        self.adminUser.authenticate(self.serverConfig.password)
+        self.adminUser.authenticate(password=self.serverConfig.password)
+        self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
 
     def authenticatebyname(self, username, password):
         method = '/Users/AuthenticateByName'
@@ -57,12 +58,13 @@ class MediaServer(object):
             response = self.server_request(hdr=xEmbyAuth, method=method, data=data)
             dictUser = response.get('User')
             dictUser['AccessToken'] = response.get('AccessToken')
-            self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
-            if dictUser['User']['Policy']['isAdministrator'] == 'true':
-                adminUserId = dictUser['User']['Id']
+            if dictUser is None:
+                raise Exception
             return self.userHelper.toUserObj(dictUser=dictUser)
         except JellyfinUnauthorized as e:
             _log.warning('host: %s username: %s Authentication Failed' % (self.url, username))
+        except Exception as e:
+            _log.warning('host: %s username: %s Something happened, unable to authenticate' % (self.url, username))
 
     def authenticate(self, userid, password):
         # TODO manual testing then unit testing
@@ -74,9 +76,6 @@ class MediaServer(object):
             response = self.server_request(hdr=xEmbyAuth, method=method, data=data)
             dictUser = response.get('User')
             dictUser['AccessToken'] = response.get('AccessToken')
-            self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
-            if dictUser['User']['Policy']['isAdministrator'] == 'true':
-                adminUserId = dictUser['User']['Id']
             return self.userHelper.toUserObj(dictUser=dictUser)
         except JellyfinUnauthorized as e:
             _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
