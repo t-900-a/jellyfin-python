@@ -261,7 +261,7 @@ class MediaServer(object):
         method = '/user_usage_stats/submit_custom_query'
         data = {'CustomQueryString': '"{Query}"', 'ReplaceUserId': '"{replace}"'.format(
             Query = query,
-            replace = usernameNotIds
+            replace = usernamesNotIds
         )}
         try:
             results = self.server_getrequest(hdr=self.tokenHeader, method=method, data=data)
@@ -291,14 +291,14 @@ class MediaServer(object):
             return True
         else:
             return False
-        
+
     def restart(self):
         method = '/System/Restart'
         try:
             response = self.server_request(hdr=self.tokenHeader, method=method)
             return True
         except exceptions as e:
-            return False
+            _log.critical(e)
         
    def shutdown(self):
         method = '/System/Shutdown'
