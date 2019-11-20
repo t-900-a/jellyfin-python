@@ -225,9 +225,9 @@ class MediaServer(object):
                     break
             s=","
             t="|"
-            method = '/User/{UserId}/Items?{name}&{ids}&{folderId}&{years}&{isPlayed}&{artists}&{albums}&{person}&{studios}&{minPremiereDate}&{maxPremiereDate}&{maxMPAARating}&{minCommRat}&{minCritRat}&{HD}&{3D}&{missing}&{unaired}&{fields}&{exclude}&{sortBy}&{order}&{limit}".format(
+            method = '/User/{UserId}/Items?{name}&{ids}&{folderId}&{years}&{isPlayed}&{artists}&{albums}&{person}&{studios}&{minPremiereDate}&{maxPremiereDate}&{maxMPAARating}&{minCommRat}&{minCritRat}&{HD}&{threeD}&{missing}&{unaired}&{fields}&{exclude}&{sortBy}&{order}&{limit}'.format(
                 name="NameStartsWith=" + Name,
-                ids="Ids=" + s.join(Ids)",
+                ids="Ids=" + s.join(Ids),
                 folderId=folderId,
                 years="Years=" + s.join(Years),
                 isPlayed="IsPlayed=" + IsPlayed,
@@ -241,7 +241,7 @@ class MediaServer(object):
                 minCommRat="MinCommunityRating=" + MinCommunityRating,
                 minCritRat="MinCriticRating=" + MinCriticRating,
                 HD="IsHD=" + str(IsHD),
-                3D="Is3D=" + str(Is3D),
+                threeD="Is3D=" + str(Is3D),
                 missing="IsMissing=" + str(IsMissing),
                 unaired="IsUnaired=" + str(IsUnaired),
                 fields="Fields=" + s.join(Fields),
