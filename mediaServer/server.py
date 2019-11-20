@@ -310,110 +310,109 @@ class MediaServer(object):
         except exceptions as e:
             _log.critical(e)
 
+    def shutdown(self):
+        method = '/System/Shutdown'
+        try:
+            response = self.server_request(hdr=self.tokenHeader, method=method)
+            return True
+        except Exception as e:
+            return False
 
-def shutdown(self):
-    method = '/System/Shutdown'
-    try:
-        response = self.server_request(hdr=self.tokenHeader, method=method)
-        return True
-    except Exception as e:
-        return False
 
-
-def server_request(self, hdr, method, data=None):
-    hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
-    _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
-        method=method,
-        headers=hdr,
-        data=data
-    ))
-    rsp = requests.post(self.url + method, headers=hdr, data=json.dumps(data))
-
-    if rsp.status_code == 400:
-        raise exceptions.JellyfinBadRequest(rsp.content)
-    if rsp.status_code == 401:
-        raise exceptions.JellyfinUnauthorized(rsp.content)
-    if rsp.status_code == 403:
-        raise exceptions.JellyfinForbidden(rsp.content)
-    if rsp.status_code == 404:
-        raise exceptions.JellyfinResourceNotFound(rsp.content)
-    if rsp.status_code >= 500 and rsp.status_code < 600:
-        raise exceptions.JellyfinServerError(rsp.content)
-    if rsp.status_code != 200 and rsp.status_code != 204:
-        raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
-            code=rsp.status_code,
-            method=method
+    def server_request(self, hdr, method, data=None):
+        hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
+        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+            method=method,
+            headers=hdr,
+            data=data
         ))
-    if rsp.content != b'':
-        result = rsp.json()
-    else:
-        result = rsp.status_code
-    _ppresult = pprint.pformat(result)
-    _log.critical(u"Result:\n{result}".format(result=_ppresult))
-    return result
+        rsp = requests.post(self.url + method, headers=hdr, data=json.dumps(data))
+
+        if rsp.status_code == 400:
+            raise exceptions.JellyfinBadRequest(rsp.content)
+        if rsp.status_code == 401:
+            raise exceptions.JellyfinUnauthorized(rsp.content)
+        if rsp.status_code == 403:
+            raise exceptions.JellyfinForbidden(rsp.content)
+        if rsp.status_code == 404:
+            raise exceptions.JellyfinResourceNotFound(rsp.content)
+        if rsp.status_code >= 500 and rsp.status_code < 600:
+            raise exceptions.JellyfinServerError(rsp.content)
+        if rsp.status_code != 200 and rsp.status_code != 204:
+            raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
+                code=rsp.status_code,
+                method=method
+            ))
+        if rsp.content != b'':
+            result = rsp.json()
+        else:
+            result = rsp.status_code
+        _ppresult = pprint.pformat(result)
+        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        return result
 
 
-def server_getrequest(self, hdr, method, data=None):
-    hdr = {'accept': 'application/json', **hdr}
-    _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
-        method=method,
-        headers=hdr,
-        data=data
-    ))
-    rsp = requests.get(self.url + method, headers=hdr, data=json.dumps(data))
-
-    if rsp.status_code == 400:
-        raise exceptions.JellyfinBadRequest(rsp.content)
-    if rsp.status_code == 401:
-        raise exceptions.JellyfinUnauthorized(rsp.content)
-    if rsp.status_code == 403:
-        raise exceptions.JellyfinForbidden(rsp.content)
-    if rsp.status_code == 404:
-        raise exceptions.JellyfinResourceNotFound(rsp.content)
-    if rsp.status_code >= 500 and rsp.status_code < 600:
-        raise exceptions.JellyfinServerError(rsp.content)
-    if rsp.status_code != 200 and rsp.status_code != 204:
-        raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
-            code=rsp.status_code,
-            method=method
+    def server_getrequest(self, hdr, method, data=None):
+        hdr = {'accept': 'application/json', **hdr}
+        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+            method=method,
+            headers=hdr,
+            data=data
         ))
-    if rsp.content != b'':
-        result = rsp.json()
-    else:
-        result = rsp.status_code
-    _ppresult = pprint.pformat(result)
-    _log.critical(u"Result:\n{result}".format(result=_ppresult))
-    return result
+        rsp = requests.get(self.url + method, headers=hdr, data=json.dumps(data))
+
+        if rsp.status_code == 400:
+            raise exceptions.JellyfinBadRequest(rsp.content)
+        if rsp.status_code == 401:
+            raise exceptions.JellyfinUnauthorized(rsp.content)
+        if rsp.status_code == 403:
+            raise exceptions.JellyfinForbidden(rsp.content)
+        if rsp.status_code == 404:
+            raise exceptions.JellyfinResourceNotFound(rsp.content)
+        if rsp.status_code >= 500 and rsp.status_code < 600:
+            raise exceptions.JellyfinServerError(rsp.content)
+        if rsp.status_code != 200 and rsp.status_code != 204:
+            raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
+                code=rsp.status_code,
+                method=method
+            ))
+        if rsp.content != b'':
+            result = rsp.json()
+        else:
+            result = rsp.status_code
+        _ppresult = pprint.pformat(result)
+        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        return result
 
 
-def server_delete(self, hdr, method):
-    hdr = {'accept': '*/*', **hdr}
-    _log.critical(u"Method: {method}\nHeaders:\n{headers}".format(
-        method=method,
-        headers=hdr
-    ))
-
-    rsp = requests.delete(url=self.url + method, headers=hdr)
-
-    if rsp.status_code == 400:
-        raise exceptions.JellyfinBadRequest(rsp.content)
-    if rsp.status_code == 401:
-        raise exceptions.JellyfinUnauthorized(rsp.content)
-    if rsp.status_code == 403:
-        raise exceptions.JellyfinForbidden(rsp.content)
-    if rsp.status_code == 404:
-        raise exceptions.JellyfinResourceNotFound(rsp.content)
-    if rsp.status_code >= 500 and rsp.status_code < 600:
-        raise exceptions.JellyfinServerError(rsp.content)
-    if rsp.status_code != 200 and rsp.status_code != 204:
-        raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
-            code=rsp.status_code,
-            method=method
+    def server_delete(self, hdr, method):
+        hdr = {'accept': '*/*', **hdr}
+        _log.critical(u"Method: {method}\nHeaders:\n{headers}".format(
+            method=method,
+            headers=hdr
         ))
-    if rsp.content != b'':
-        result = rsp.json()
-    else:
-        result = rsp.status_code
-    _ppresult = pprint.pformat(result)
-    _log.critical(u"Result:\n{result}".format(result=_ppresult))
-    return result
+
+        rsp = requests.delete(url=self.url + method, headers=hdr)
+
+        if rsp.status_code == 400:
+            raise exceptions.JellyfinBadRequest(rsp.content)
+        if rsp.status_code == 401:
+            raise exceptions.JellyfinUnauthorized(rsp.content)
+        if rsp.status_code == 403:
+            raise exceptions.JellyfinForbidden(rsp.content)
+        if rsp.status_code == 404:
+            raise exceptions.JellyfinResourceNotFound(rsp.content)
+        if rsp.status_code >= 500 and rsp.status_code < 600:
+            raise exceptions.JellyfinServerError(rsp.content)
+        if rsp.status_code != 200 and rsp.status_code != 204:
+            raise exceptions.JellyfinException("Invalid HTTP status {code} for method {method}.".format(
+                code=rsp.status_code,
+                method=method
+            ))
+        if rsp.content != b'':
+            result = rsp.json()
+        else:
+            result = rsp.status_code
+        _ppresult = pprint.pformat(result)
+        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        return result
