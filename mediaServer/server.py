@@ -54,7 +54,7 @@ class MediaServer(object):
             response = self.server_request(hdr=xEmbyAuth, method=method, data=data)
             dictUser = response.get('User')
             dictUser['AccessToken'] = response.get('AccessToken')
-            self.tokenHeader = {'X-Emby-Token:' self.adminUser.AccessToken)
+            self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
             if dictUser['User']['Policy']['isAdministrator'] == 'true':
                 adminUserId = dictUser['User']['Id']
         except exceptions as e:
@@ -72,7 +72,7 @@ class MediaServer(object):
             response = self.server_request(hdr=xEmbyAuth, method=method, data=data)
             dictUser = response.get('User')
             dictUser['AccessToken'] = response.get('AccessToken')
-            self.tokenHeader = {'X-Emby-Token:' self.adminUser.AccessToken)
+            self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
             if dictUser['User']['Policy']['isAdministrator'] == 'true':
                 adminUserId = dictUser['User']['Id']
         except exceptions as e:
