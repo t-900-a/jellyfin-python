@@ -35,11 +35,18 @@ class MediaServer(object):
         self.authenticateasadmin()
 
     def authenticateasadmin(self):
+        """
+        Log in as admin
+        Stores token header for future API calls
+        """
         self.adminUser = User(Name=self.serverConfig.user, server=self)
         self.adminUser.authenticate(password=self.serverConfig.password)
         self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
 
     def authenticatebyname(self, username, password):
+        """
+        Log in as a specific username
+        """
         method = '/Users/AuthenticateByName'
 
         xEmbyAuth = {
@@ -55,7 +62,7 @@ class MediaServer(object):
         data = {'Username': username, 'Password': password,
                 'Pw': password}
         try:
-            response = self.server_request(hdr=xEmbyAuth, method=method, data=data)
+            response = self.server_postrequest(hdr=xEmbyAuth, method=method, data=data)
             dictUser = response.get('User')
             dictUser['AccessToken'] = response.get('AccessToken')
             if dictUser is None:
@@ -67,13 +74,16 @@ class MediaServer(object):
             _log.warning('host: %s username: %s Something happened, unable to authenticate' % (self.url, username))
 
     def authenticate(self, userid, password):
+        """
+        Authenicate user by user ID
+        """
         # TODO manual testing then unit testing
         method = '/Users/{userid}/Authenticate'.format(userid=userid)
         data = {'Pw': password,
                 'Password': password}
 
         try:
-            response = self.server_request(hdr=xEmbyAuth, method=method, data=data)
+            response = self.server_postrequest(hdr=xEmbyAuth, method=method, data=data)
             dictUser = response.get('User')
             dictUser['AccessToken'] = response.get('AccessToken')
             return self.userHelper.toUserObj(dictUser=dictUser)
@@ -81,9 +91,15 @@ class MediaServer(object):
             _log.warning('host: %s userid: %s Authentication Failed' % (self.url, userid))
 
     def getAdmin(self):
+        """
+        Get admin user object
+        """
         return adminUser
 
     def getapikeys(self):
+        """
+        Get API keys
+        """
         method = '/Auth/Keys'
         xEmbyAuth = {'X-Emby-Authorization': 'Token="{Token}"'.format(
             Token=self.adminUser.AccessToken
@@ -96,6 +112,9 @@ class MediaServer(object):
             return []
 
     def logoutuser(self, userId):
+        """
+        Log out specific user ID
+        """
         method = '/Sessions/Logout'
         xEmbyAuth = {
             'X-Emby-Authorization': 'Emby UserId="{UserId}", Client="{Client}", Device="{Device}", DeviceId="{DeviceId}", Version="{Version}", Token="{Token}"'.format(
@@ -107,7 +126,7 @@ class MediaServer(object):
                 Token=self.adminUser.AccessToken
             )}
         try:
-            response = self.server_request(hdr=xEmbyAuth, method=method, data=None)
+            response = self.server_postrequest(hdr=xEmbyAuth, method=method, data=None)
             self.adminUser.AccessToken = None
             return True
         except Exception as e:
@@ -117,18 +136,24 @@ class MediaServer(object):
             _log.critical(e)
 
     def createuserbyname(self, username):
+        """
+        Create a new user with username
+        """
         method = '/Users/New'
         data = {'Name': username}
-        dictUser = self.server_request(hdr=self.tokenHeader, method=method, data=data)
+        dictUser = self.server_postrequest(hdr=self.tokenHeader, method=method, data=data)
         _log.info('New user account created: {username}'.format(username=username))
         newuser = self.userHelper.toUserObj(dictUser=dictUser)
         newuser.server = self
         return newuser
 
     def deleteuser(self, userId):
+        """
+        Delete a user with user ID
+        """
         method = '/Users/{Id}'.format(Id=userId)
         try:
-            response = self.server_delete(hdr=self.tokenHeader, method=method)
+            response = self.server_deleterequest(hdr=self.tokenHeader, method=method)
             return True
         except Exception as e:
             _log.warning('host: %s userId: %s User Deletion Failed' % (self.url, userId))
@@ -137,13 +162,16 @@ class MediaServer(object):
             _log.critical(e)
 
     def updateuserpolicy(self, user):
+        """
+        Update a user policy with User object
+        """
         if self.adminUser.AccessToken is None:
             _log.error(
                 __class__ + '.updateuserpolicy requires an admins AccessToken before ' + user.Name + ' can be updated.')
         method = '/Users/{Id}/Policy'.format(Id=user.Id)
         data = self.userHelper.todictPolicy(policyObj=user.Policy)
         try:
-            response = self.server_request(hdr=self.tokenHeader, method=method, data=data)
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method, data=data)
             return True
         except Exception as e:
             _log.warning('host: %s userId: %s User Policy Update Failed' % (self.url, userId))
@@ -152,13 +180,16 @@ class MediaServer(object):
             _log.critical(e)
 
     def updateuserconfig(self, user):
+        """
+        Update a user config with User object
+        """
         if self.adminUser.AccessToken is None:
             _log.error(
                 __class__ + '.updateuserconfig requires an admins AccessToken before ' + user.Name + ' can be updated.')
         method = '/Users/{Id}/Configuration'.format(Id=user.Id)
         data = self.userHelper.todictConfig(configObj=user.Configuration)
         try:
-            response = self.server_request(hdr=self.tokenHeader, method=method, data=data)
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method, data=data)
             return True
         except Exception as e:
             _log.warning('host: %s userId: %s User Config Update Failed' % (self.url, userId))
@@ -167,6 +198,9 @@ class MediaServer(object):
             _log.critical(e)
 
     def updateuserpassword(self, AccessToken, userId, currentPw, newPw):
+        """
+        Update a user password with user ID
+        """
         if AccessToken is None:
             _log.error(
                 __class__ + '.updateuserpassword requires an AccessToken before password update for User:' + userId)
@@ -175,7 +209,7 @@ class MediaServer(object):
         tokenHeader = {'X-Emby-Token': AccessToken}
         data = {'Id': userId, 'CurrentPw': currentPw, 'NewPw': newPw}
         try:
-            self.server_request(hdr=tokenHeader, method=method, data=data)
+            self.server_postrequest(hdr=tokenHeader, method=method, data=data)
             _log.debug("Passsword updated successfully for user id: {user}".format(user=userId))
             return True
         except Exception as inst:
@@ -185,6 +219,10 @@ class MediaServer(object):
             _log.debug("Password update failed for user id: {user}".format(user=userId))
 
     def getusers(self, IsHidden=str(''), IsDisabled=str(''), IsGuest=str('')):
+        """
+        Get all users
+        Optional filters
+        """
         method = '/Users?IsHidden={Hidden}&IsDisabled={Disabled}&IsGuest={Guest}' \
             .format(Hidden=IsHidden,
                     Disabled=IsDisabled,
@@ -204,6 +242,9 @@ class MediaServer(object):
         return serverusers
 
     def getlibraryinfo(self):
+        """
+        Get info of all libraries
+        """
         info = {}
         method = '/Items/Counts'
         try:
@@ -223,6 +264,9 @@ class MediaServer(object):
                MinCriticRating='', IsHD='', Is3D='', IsMissing='', IsUnaired='',
                Fields=['ParentId', 'DateCreated', 'SortName'], ExcludeItemTypes='', SortBy='', SortOrder='Descending',
                Limit=''):
+        """
+        Get media search results
+        """
         folderId = ''
         try:
             method = '/User/{UserID}/Items'
@@ -266,6 +310,9 @@ class MediaServer(object):
             _log.debug("Cannot retrieve search results of custom query from server: {server}".format(server=self.url))
 
     def customsql(self, query=str(''), usernamesNotIds=str('')):
+        """
+        Execute custom SQL query
+        """
         method = '/user_usage_stats/submit_custom_query'
         data = {'CustomQueryString': '"{Query}"', 'ReplaceUserId': '"{replace}"'.format(
             Query=query,
@@ -283,6 +330,9 @@ class MediaServer(object):
         return results
 
     def info(self):
+        """
+        Get server system info
+        """
         method = '/System/Info'
         try:
             info = self.server_getrequest(hdr=self.tokenHeader, method=method)
@@ -295,6 +345,9 @@ class MediaServer(object):
         return info
 
     def ping(self):
+        """
+        Ping the server
+        """
         info = self.info()  # '/System/Ping' not working for some reason
         if info:
             return True
@@ -302,23 +355,29 @@ class MediaServer(object):
             return False
 
     def restart(self):
+        """
+        Restart the server
+        """
         method = '/System/Restart'
         try:
-            response = self.server_request(hdr=self.tokenHeader, method=method)
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method)
             return True
         except exceptions as e:
             _log.critical(e)
 
     def shutdown(self):
+        """
+        Shutdown the server
+        """
         method = '/System/Shutdown'
         try:
-            response = self.server_request(hdr=self.tokenHeader, method=method)
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method)
             return True
         except Exception as e:
             return False
 
 
-    def server_request(self, hdr, method, data=None):
+    def server_postrequest(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
         _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
             method=method,
@@ -384,7 +443,7 @@ class MediaServer(object):
         return result
 
 
-    def server_delete(self, hdr, method):
+    def server_deleterequest(self, hdr, method):
         hdr = {'accept': '*/*', **hdr}
         _log.critical(u"Method: {method}\nHeaders:\n{headers}".format(
             method=method,
