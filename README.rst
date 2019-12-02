@@ -30,10 +30,28 @@ Copyright (c) 2019 TiedToAStar <TiedToAStar@protonmail.com>
 
 .. _`LICENSE.txt`: LICENSE.txt
 
+Example Server Configuration
+----------
+The configurator will look at ./cfg/mediaserver-config.json
+The user specified should have admin privileges
+
+.. code-block:: bash
+
+    {
+  "host": "127.0.0.1",
+  "path": "",
+  "port": "8096",
+  "protocol": "http",
+  "user": "MyEmbyUser" }
+
+Example Project
+----------
+Check out! https://github.com/tiedtoastar/emby2jellyfin-Migration-Scripts
+
 Want to help?
 -------------
 
-If you find this project useful, please consider a donation to the following address:
+If you find this project useful, please consider a donation to the following Monero address:
 ``47q3TVnd79QcMLqFE2HJC5HTWDadUXtMDVavERPfeT3xFiBeqQQX6knBNALTz4aciC6pSbnLoMCHXXsQDCPV1BT7TqoqZxW``
 
 
