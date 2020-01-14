@@ -265,7 +265,7 @@ class MediaServer(object):
         """
         try:
             method = '/Search/Hints?{}'.format(keyword)
-            return self.server_getrequest(hdr=self.tokenHeader, method=method)
+            return self.server_getrequest(hdr=self.tokenHeader, method=method)['SearchHints']
         except Exception as inst:
             _log.critical(type(inst))
             _log.critical(inst.args)
