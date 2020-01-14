@@ -259,49 +259,12 @@ class MediaServer(object):
 
         return info
 
-    def search(self, Name='', Ids='', FolderName='', Years='', IsPlayed='', Artists='', Albums='', Person='',
-               Studios='', MinPremiereDate='', MaxPremiereDate='', MaxMPAARating='', MinCommunityRating='',
-               MinCriticRating='', IsHD='', Is3D='', IsMissing='', IsUnaired='',
-               Fields=['ParentId', 'DateCreated', 'SortName'], ExcludeItemTypes='', SortBy='', SortOrder='Descending',
-               Limit=''):
+    def search(self, keyword):
         """
         Get media search results
         """
-        folderId = ''
         try:
-            method = '/User/{UserID}/Items'
-            folders = self.server_getrequest(hdr=self.tokenHeader, method=method)
-            for f in folders['Items']:
-                if f['Name'] == FolderName:
-                    folderId = f['Id']
-                    break
-            s = ","
-            t = "|"
-            method = '/User/{UserId}/Items?{name}&{ids}&{folderId}&{years}&{isPlayed}&{artists}&{albums}&{person}&{studios}&{minPremiereDate}&{maxPremiereDate}&{maxMPAARating}&{minCommRat}&{minCritRat}&{HD}&{threeD}&{missing}&{unaired}&{fields}&{exclude}&{sortBy}&{order}&{limit}'.format(
-                name="NameStartsWith=" + Name,
-                ids="Ids=" + s.join(Ids),
-                folderId=folderId,
-                years="Years=" + s.join(Years),
-                isPlayed="IsPlayed=" + IsPlayed,
-                artists="Artists=" + t.join(Artists),
-                albums="Albums=" + t.join(Albums),
-                person="Person=" + Person,
-                studios="Studios=" + t.join(Studios),
-                minPremiereDate="MinPremiereDate=" + MinPremiereDate,
-                maxPremiereDate="MaxPremiereDate=" + MaxPremiereDate,
-                maxMPAARating="MaxMPAARating=" + MaxMPAARating,
-                minCommRat="MinCommunityRating=" + MinCommunityRating,
-                minCritRat="MinCriticRating=" + MinCriticRating,
-                HD="IsHD=" + str(IsHD),
-                threeD="Is3D=" + str(Is3D),
-                missing="IsMissing=" + str(IsMissing),
-                unaired="IsUnaired=" + str(IsUnaired),
-                fields="Fields=" + s.join(Fields),
-                exclude="ExcludeItemTypes=" + s.join(ExcludeItemTypes),
-                sortBy="SortBy=" + s.join(SortBy),
-                order="SortOrder=" + SortOrder,
-                limit="Limit=" + str(Limit)
-            )
+            method = '/Search/Hints?{}'.format(keyword)
             return self.server_getrequest(hdr=self.tokenHeader, method=method)
         except Exception as inst:
             _log.critical(type(inst))
