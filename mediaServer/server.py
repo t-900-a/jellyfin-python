@@ -3,6 +3,7 @@ from mediaServer.user import User
 
 # from __init__ import __version__
 __version__ = 1
+
 from . import exceptions
 from .exceptions import *
 import requests
@@ -192,24 +193,24 @@ class MediaServer(object):
             response = self.server_postrequest(hdr=self.tokenHeader, method=method, data=data)
             return True
         except Exception as e:
-            _log.warning('host: %s userId: %s User Config Update Failed' % (self.url, userId))
+            _log.warning('host: %s userId: %s User Config Update Failed' % (self.url, user.Id))
             _log.critical(type(e))
             _log.critical(e.args)
             _log.critical(e)
 
-    def updateuserpassword(self, AccessToken, userId, currentPw, newPw):
+    def updateuserpassword(self, userId, currentPw, newPw):
         """
         Update a user password with user ID
         """
-        if AccessToken is None:
+        if self.admin.AccessToken is None:
             _log.error(
                 __class__ + '.updateuserpassword requires an AccessToken before password update for User:' + userId)
 
         method = '/Users/{Id}/Password'.format(Id=userId)
-        tokenHeader = {'X-Emby-Token': AccessToken}
         data = {'Id': userId, 'CurrentPw': currentPw, 'NewPw': newPw}
         try:
-            self.server_postrequest(hdr=tokenHeader, method=method, data=data)
+            self.resetuserpassword(userId)  # must reset password first before setting new password
+            self.server_postrequest(hdr=self.tokenHeader, method=method, data=data)
             _log.debug("Passsword updated successfully for user id: {user}".format(user=userId))
             return True
         except Exception as inst:
@@ -217,6 +218,26 @@ class MediaServer(object):
             _log.critical(inst.args)
             _log.critical(inst)
             _log.debug("Password update failed for user id: {user}".format(user=userId))
+
+    def resetuserpassword(self, userId):
+        """
+        Reset a user password with user ID
+        """
+        if self.admin.AccessToken is None:
+            _log.error(
+                __class__ + '.resetuserpassword requires an AccessToken before password reset for User:' + userId)
+
+        method = '/Users/{Id}/Password'.format(Id=userId)
+        data = {'Id': userId, 'ResetPassword': 'true'}
+        try:
+            self.server_postrequest(hdr=self.tokenHeader, method=method, data=data)
+            _log.debug("Password reset successfully for user id: {user}".format(user=userId))
+            return True
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Password reset failed for user id: {user}".format(user=userId))
 
     def getusers(self, IsHidden=str(''), IsDisabled=str(''), IsGuest=str('')):
         """
@@ -258,56 +279,6 @@ class MediaServer(object):
             _log.debug("Cannot retrieve library counts from server: {server}".format(server=self.url))
 
         return info
-
-    def search(self, Name='', Ids='', FolderName='', Years='', IsPlayed='', Artists='', Albums='', Person='',
-               Studios='', MinPremiereDate='', MaxPremiereDate='', MaxMPAARating='', MinCommunityRating='',
-               MinCriticRating='', IsHD='', Is3D='', IsMissing='', IsUnaired='',
-               Fields=['ParentId', 'DateCreated', 'SortName'], ExcludeItemTypes='', SortBy='', SortOrder='Descending',
-               Limit=''):
-        """
-        Get media search results
-        """
-        folderId = ''
-        try:
-            method = '/User/{UserID}/Items'
-            folders = self.server_getrequest(hdr=self.tokenHeader, method=method)
-            for f in folders['Items']:
-                if f['Name'] == FolderName:
-                    folderId = f['Id']
-                    break
-            s = ","
-            t = "|"
-            method = '/User/{UserId}/Items?{name}&{ids}&{folderId}&{years}&{isPlayed}&{artists}&{albums}&{person}&{studios}&{minPremiereDate}&{maxPremiereDate}&{maxMPAARating}&{minCommRat}&{minCritRat}&{HD}&{threeD}&{missing}&{unaired}&{fields}&{exclude}&{sortBy}&{order}&{limit}'.format(
-                name="NameStartsWith=" + Name,
-                ids="Ids=" + s.join(Ids),
-                folderId=folderId,
-                years="Years=" + s.join(Years),
-                isPlayed="IsPlayed=" + IsPlayed,
-                artists="Artists=" + t.join(Artists),
-                albums="Albums=" + t.join(Albums),
-                person="Person=" + Person,
-                studios="Studios=" + t.join(Studios),
-                minPremiereDate="MinPremiereDate=" + MinPremiereDate,
-                maxPremiereDate="MaxPremiereDate=" + MaxPremiereDate,
-                maxMPAARating="MaxMPAARating=" + MaxMPAARating,
-                minCommRat="MinCommunityRating=" + MinCommunityRating,
-                minCritRat="MinCriticRating=" + MinCriticRating,
-                HD="IsHD=" + str(IsHD),
-                threeD="Is3D=" + str(Is3D),
-                missing="IsMissing=" + str(IsMissing),
-                unaired="IsUnaired=" + str(IsUnaired),
-                fields="Fields=" + s.join(Fields),
-                exclude="ExcludeItemTypes=" + s.join(ExcludeItemTypes),
-                sortBy="SortBy=" + s.join(SortBy),
-                order="SortOrder=" + SortOrder,
-                limit="Limit=" + str(Limit)
-            )
-            return self.server_getrequest(hdr=self.tokenHeader, method=method)
-        except Exception as inst:
-            _log.critical(type(inst))
-            _log.critical(inst.args)
-            _log.critical(inst)
-            _log.debug("Cannot retrieve search results of custom query from server: {server}".format(server=self.url))
 
     def customsql(self, query=str(''), usernamesNotIds=str('')):
         """
@@ -376,7 +347,6 @@ class MediaServer(object):
         except Exception as e:
             return False
 
-
     def server_postrequest(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
         _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
@@ -409,7 +379,6 @@ class MediaServer(object):
         _log.critical(u"Result:\n{result}".format(result=_ppresult))
         return result
 
-
     def server_getrequest(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', **hdr}
         _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
@@ -441,7 +410,6 @@ class MediaServer(object):
         _ppresult = pprint.pformat(result)
         _log.critical(u"Result:\n{result}".format(result=_ppresult))
         return result
-
 
     def server_deleterequest(self, hdr, method):
         hdr = {'accept': '*/*', **hdr}
