@@ -280,6 +280,19 @@ class MediaServer(object):
 
         return info
 
+    def search(self, keyword):
+        """
+        Get media search results
+        """
+        try:
+            method = '/Search/Hints?{}'.format(keyword)
+            return self.server_getrequest(hdr=self.tokenHeader, method=method)['SearchHints']
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve search results of custom query from server: {server}".format(server=self.url))
+
     def customsql(self, query=str(''), usernamesNotIds=str('')):
         """
         Execute custom SQL query
@@ -299,8 +312,55 @@ class MediaServer(object):
                 server=self.url, customQuery=query))
 
         return results
-
-    def info(self):
+    
+    def makeplaylist(self, name):
+        """
+        Create a playlist
+        """
+        try:
+            method = '/Playlists?Name={}'.format(name)
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot make playlist on server: {server}".format(server=self.url))
+        
+        return response
+        
+    def addtoplaylist(self, playlistId, itemIds):
+        """
+        Add items to playlist
+        itemIds = []
+        """
+        try:
+            itemlist = ','.join(itemIds)
+            method = '/Playlists/{}/Items?{}'.format(playlistId, itemlist)
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot add items to playlist on server: {server}".format(server=self.url))
+                       
+        return response          
+                       
+    def updaterating(self, userId, itemId, upvote=True):
+        """
+        Update rating for a media item
+        """
+        try:
+            method = '/Users/{}/Items/{}/Rating?Likes={}'.format(userId, itemId, ("true" if upvote else "false"))
+            response = self.server_postrequest(hdr=self.tokenHeader, method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot update rating for itemId {} for userId {} on server: {}".format(itemId, userId, self.url))
+            
+        return response
+                       
+   def info(self):
         """
         Get server system info
         """
