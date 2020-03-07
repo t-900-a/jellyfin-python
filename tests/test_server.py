@@ -385,7 +385,6 @@ class ServerTestCase(unittest.TestCase):
     def test_updateuserpassword(self, mock_post):
         mock_post.return_value.status_code = 204
         result = self.testServer.updateuserpassword(userId=self.testServer.adminUser.Id,
-                                                    AccessToken=self.testServer.adminUser.AccessToken,
                                                     currentPw='', newPw='set')
         self.assertTrue(result)
 

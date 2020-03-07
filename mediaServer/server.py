@@ -202,7 +202,7 @@ class MediaServer(object):
         """
         Update a user password with user ID
         """
-        if self.admin.AccessToken is None:
+        if self.adminUser.AccessToken is None:
             _log.error(
                 __class__ + '.updateuserpassword requires an AccessToken before password update for User:' + userId)
 
@@ -223,7 +223,7 @@ class MediaServer(object):
         """
         Reset a user password with user ID
         """
-        if self.admin.AccessToken is None:
+        if self.adminUser.AccessToken is None:
             _log.error(
                 __class__ + '.resetuserpassword requires an AccessToken before password reset for User:' + userId)
 
@@ -360,7 +360,7 @@ class MediaServer(object):
             
         return response
                        
-   def info(self):
+    def info(self):
         """
         Get server system info
         """
