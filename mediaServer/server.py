@@ -1,4 +1,6 @@
 from mediaServer.userhelper import UserHelper
+from mediaServer.itemhelper import ItemHelper
+from mediaServer.item import Item
 from mediaServer.user import User
 
 # from __init__ import __version__
@@ -17,6 +19,7 @@ _log = logging.getLogger(__name__)
 
 class MediaServer(object):
     userHelper = UserHelper()
+    itemHelper = ItemHelper()
     url = None
     adminUser = None
     serverConfig = None
@@ -262,6 +265,40 @@ class MediaServer(object):
 
         return serverusers
 
+    # https://github.com/MediaBrowser/Emby/wiki/Browsing-the-Library
+    def get_items(self, artist_type=str(''), is_hd=str(''), recursive=str('')) -> list:
+        """
+        Get items from server
+        Optional filters
+        """
+        method = f"/Items?Recursive={recursive}&IsHD={is_hd}&ArtistType={artist_type}"
+        dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
+        try:
+            dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve items from server: {server}".format(server=self.url))
+
+        items = []
+        for dict_item in dict_items['Items']:
+            items.append(self.itemHelper.to_item_obj(dict_item=dict_item))
+        return items
+
+    def download_item(self, item: Item) -> bool:
+        dl_success = False
+        method = f"/Items/{str(item.id)}/Download"
+        try:
+            rsp = self.server_download_item(hdr=self.tokenHeader, method=method, local_filename=f"item_{str(item.id)}")
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot download item from server: {server}".format(server=self.url))
+
+        return rsp
+
     def getlibraryinfo(self):
         """
         Get info of all libraries
@@ -312,7 +349,7 @@ class MediaServer(object):
                 server=self.url, customQuery=query))
 
         return results
-    
+
     def makeplaylist(self, name):
         """
         Create a playlist
@@ -325,9 +362,9 @@ class MediaServer(object):
             _log.critical(inst.args)
             _log.critical(inst)
             _log.debug("Cannot make playlist on server: {server}".format(server=self.url))
-        
+
         return response
-        
+
     def addtoplaylist(self, playlistId, itemIds):
         """
         Add items to playlist
@@ -342,9 +379,9 @@ class MediaServer(object):
             _log.critical(inst.args)
             _log.critical(inst)
             _log.debug("Cannot add items to playlist on server: {server}".format(server=self.url))
-                       
-        return response          
-                       
+
+        return response
+
     def updaterating(self, userId, itemId, upvote=True):
         """
         Update rating for a media item
@@ -356,10 +393,11 @@ class MediaServer(object):
             _log.critical(type(inst))
             _log.critical(inst.args)
             _log.critical(inst)
-            _log.debug("Cannot update rating for itemId {} for userId {} on server: {}".format(itemId, userId, self.url))
-            
+            _log.debug(
+                "Cannot update rating for itemId {} for userId {} on server: {}".format(itemId, userId, self.url))
+
         return response
-                       
+
     def info(self):
         """
         Get server system info
@@ -470,6 +508,23 @@ class MediaServer(object):
         _ppresult = pprint.pformat(result)
         _log.critical(u"Result:\n{result}".format(result=_ppresult))
         return result
+
+    def server_download_item(self, hdr, method, local_filename):
+        hdr = {'accept': 'application/json', **hdr}
+        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+            method=method,
+            headers=hdr,
+            data=None
+        ))
+
+        with requests.get(self.url + method, headers=hdr, data=None, stream=True) as r:
+            r.raise_for_status()
+            with open(local_filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+                        # f.flush()
+        return local_filename
 
     def server_deleterequest(self, hdr, method):
         hdr = {'accept': '*/*', **hdr}
