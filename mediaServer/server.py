@@ -266,12 +266,12 @@ class MediaServer(object):
         return serverusers
 
     # https://github.com/MediaBrowser/Emby/wiki/Browsing-the-Library
-    def get_items(self, artist_type=str(''), is_hd=str(''), recursive=str('')) -> list:
+    def get_items(self, artist_type=str(''), is_hd=str(''), recursive=str(''), include_item_types=str(''), fields=str('')) -> list:
         """
         Get items from server
         Optional filters
         """
-        method = f"/Items?Recursive={recursive}&IsHD={is_hd}&ArtistType={artist_type}"
+        method = f"/Items?Recursive={recursive}&IsHD={is_hd}&ArtistType={artist_type}&Fields={fields}&IncludeItemTypes={include_item_types}"
         dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
         try:
             dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
@@ -285,6 +285,12 @@ class MediaServer(object):
         for dict_item in dict_items['Items']:
             items.append(self.itemHelper.to_item_obj(dict_item=dict_item))
         return items
+
+    def get_movies(self, **kwargs):
+        return self.get_items(include_item_types="Movie", **kwargs)
+
+    def get_episodes(self, **kwargs):
+        return self.get_items(include_item_types="Episode", **kwargs)
 
     def download_item(self, item: Item) -> bool:
         dl_success = False
