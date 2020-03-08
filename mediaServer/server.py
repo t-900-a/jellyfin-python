@@ -42,7 +42,7 @@ class MediaServer(object):
         """
         self.adminUser = User(Name=self.serverConfig.user, server=self)
         self.adminUser.authenticate(password=self.serverConfig.password)
-        self.tokenHeader = {'X-Emby-Token:': self.adminUser.AccessToken}
+        self.tokenHeader = {'X-Emby-Token': self.adminUser.AccessToken}
 
     def authenticatebyname(self, username, password):
         """
