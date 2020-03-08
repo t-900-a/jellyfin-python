@@ -309,5 +309,13 @@ class ItemTestCase(unittest.TestCase):
         download_rsp = self.testServer.download_item(item=item_to_dl)
         self.assertEqual(download_rsp, "item_5")
 
+    #@patch('mediaServer.server.requests.get')
+    def test_upload_item_to_skynet(self):
+        #mock_get.return_value.status_code = 200
+        item_to_dl = Item(id=5, name="big_buck_bunny_480p_surround-fix.avi")
+        skylink = self.testServer.upload_item_to_skynet(item=item_to_dl)
+        print(skylink)
+        pass
+        #self.assertEqual(download_rsp, "item_5")
 
 

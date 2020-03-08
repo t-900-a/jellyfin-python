@@ -2,6 +2,8 @@ from mediaServer.userhelper import UserHelper
 from mediaServer.itemhelper import ItemHelper
 from mediaServer.item import Item
 from mediaServer.user import User
+from siaskynet import Skynet
+from contextlib import closing
 
 # from __init__ import __version__
 __version__ = 1
@@ -305,6 +307,18 @@ class MediaServer(object):
 
         return rsp
 
+    def upload_item_to_skynet(self, item: Item) -> bool:
+        method = f"/Items/{str(item.id)}/Download"
+        try:
+            skylink = self.server_upload_item_to_skynet(hdr=self.tokenHeader, method=method, filename=f"item_{str(item.id)}-{item.name}")
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Issue uploading to skynet from {server}".format(server=self.url))
+
+        return skylink
+
     def getlibraryinfo(self):
         """
         Get info of all libraries
@@ -531,6 +545,40 @@ class MediaServer(object):
                         f.write(chunk)
                         # f.flush()
         return local_filename
+
+    def server_upload_item_to_skynet(self, hdr, method, filename):
+        hdr = {'accept': 'application/json', **hdr}
+        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+            method=method,
+            headers=hdr,
+            data=None
+        ))
+
+        with closing(requests.get(self.url + method, headers=hdr, stream=True, timeout=60 + 1)) as r:
+            chunk_in_bytes = 8192
+            total_length = int(r.headers['Content-Length'])
+
+            def media_streamer():
+                sent_length = 0
+                for data in r.iter_content(chunk_in_bytes):
+                    sent_length += len(data)
+                    progress_in_percent = (sent_length / (total_length * 1.0)) * 100
+
+                    print(f"Download/Upload % Complete:{str(progress_in_percent)}")
+                    yield data
+
+            opts = Skynet.default_upload_options()
+            host = opts.portalUrl
+            path = opts.portalUploadPath
+            upload_url = f'{host}/{path}'
+            result = requests.post(
+                upload_url, data=media_streamer(), verify=False,
+#                files={opts.portalFileFieldname: filename},
+                headers={'Content-Type': 'application/octet-stream', opts.portalFileFieldname: filename})
+            print(result)
+            print(result.status_code)
+            print(result.raw)
+        return "sia://" + result.json()["skylink"]
 
     def server_deleterequest(self, hdr, method):
         hdr = {'accept': '*/*', **hdr}
