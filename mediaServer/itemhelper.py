@@ -6,13 +6,15 @@ class ItemHelper(object):
         if dict_item['Type'] == 'Movie':
             item_obj = Movie(id=dict_item.get('Id'),
                              name=dict_item.get('Name'),
-                             path=dict_item.get('Path')
+                             path=dict_item.get('Path'),
+                             date_created=dict_item.get('DateCreated')
                              )
 
         if dict_item['Type'] == 'Episode':
             item_obj = Episode(id=dict_item.get('Id'),
                              name=dict_item.get('Name'),
-                             path=dict_item.get('Path')
+                             path=dict_item.get('Path'),
+                             date_created=dict_item.get('DateCreated')
                              )
 
         if item_obj == None:
@@ -20,7 +22,9 @@ class ItemHelper(object):
                             name=dict_item.get('Name'),
                             item_type = dict_item.get('ItemType'),
                             media_type=dict_item.get('MediaType'),
-                            is_folder=(True if dict_item.get('IsFolder') == "true" else False)
+                            is_folder=(True if dict_item.get('IsFolder') == "true" else False),
+                            path=dict_item.get('Path'),
+                            date_created=dict_item.get('DateCreated')
                             )
 
         return item_obj
