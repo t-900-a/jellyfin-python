@@ -295,7 +295,10 @@ class MediaServer(object):
 
     def download_item(self, item: Item) -> bool:
         method = f"/Items/{str(item.id)}/Download"
-        file_name = os.path.basename(item.path) if item.path is not "" else file_name = f"item_{str(item.id)}"
+        if item.path is not "":
+            file_name = os.path.basename(item.path)
+        else:
+            file_name = f"item_{str(item.id)}"
         try:
             rsp = self.server_download_item(hdr=self.tokenHeader, method=method, local_filename=file_name)
         except Exception as inst:
