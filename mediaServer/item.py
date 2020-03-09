@@ -1,12 +1,13 @@
 
 # https://github.com/MediaBrowser/Emby/wiki/Item-Information
 class Item(object):
-    def __init__(self, id: int, name=str(""), item_type=str(""), media_type=str(""), is_folder=False):
+    def __init__(self, id: int, name=str(""), item_type=str(""), media_type=str(""), path=str(""), is_folder=False):
         self.id = id
         self.name = name
         self.type = item_type
         self.media_type = media_type
         self.is_folder = is_folder
+        self.path = path
 
 class Video(Item):
     def __init__(self, **kwargs):

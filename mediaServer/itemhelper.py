@@ -5,12 +5,14 @@ class ItemHelper(object):
         item_obj = None
         if dict_item['Type'] == 'Movie':
             item_obj = Movie(id=dict_item.get('Id'),
-                             name=dict_item.get('Name')
+                             name=dict_item.get('Name'),
+                             path=dict_item.get('Path')
                              )
 
         if dict_item['Type'] == 'Episode':
             item_obj = Episode(id=dict_item.get('Id'),
-                             name=dict_item.get('Name')
+                             name=dict_item.get('Name'),
+                             path=dict_item.get('Path')
                              )
 
         if item_obj == None:
