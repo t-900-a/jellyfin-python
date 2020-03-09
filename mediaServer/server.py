@@ -453,7 +453,7 @@ class MediaServer(object):
 
     def server_postrequest(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', 'Content-Type': 'application/json', **hdr}
-        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+        _log.debug(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
             method=method,
             headers=hdr,
             data=data
@@ -480,12 +480,12 @@ class MediaServer(object):
         else:
             result = rsp.status_code
         _ppresult = pprint.pformat(result)
-        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        _log.debug(u"Result:\n{result}".format(result=_ppresult))
         return result
 
     def server_getrequest(self, hdr, method, data=None):
         hdr = {'accept': 'application/json', **hdr}
-        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+        _log.debug(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
             method=method,
             headers=hdr,
             data=data
@@ -512,12 +512,12 @@ class MediaServer(object):
         else:
             result = rsp.status_code
         _ppresult = pprint.pformat(result)
-        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        _log.debug(u"Result:\n{result}".format(result=_ppresult))
         return result
 
     def server_download_item(self, hdr, method, local_filename):
         hdr = {'accept': 'application/json', **hdr}
-        _log.critical(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
+        _log.debug(u"Method: {method}\nHeaders:\n{headers}\nData:\n{data}".format(
             method=method,
             headers=hdr,
             data=None
@@ -534,7 +534,7 @@ class MediaServer(object):
 
     def server_deleterequest(self, hdr, method):
         hdr = {'accept': '*/*', **hdr}
-        _log.critical(u"Method: {method}\nHeaders:\n{headers}".format(
+        _log.debug(u"Method: {method}\nHeaders:\n{headers}".format(
             method=method,
             headers=hdr
         ))
@@ -561,5 +561,5 @@ class MediaServer(object):
         else:
             result = rsp.status_code
         _ppresult = pprint.pformat(result)
-        _log.critical(u"Result:\n{result}".format(result=_ppresult))
+        _log.debug(u"Result:\n{result}".format(result=_ppresult))
         return result
