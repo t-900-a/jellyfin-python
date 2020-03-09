@@ -13,6 +13,7 @@ import socket
 import json
 import logging
 import pprint
+import os
 
 _log = logging.getLogger(__name__)
 
@@ -293,17 +294,17 @@ class MediaServer(object):
         return self.get_items(include_item_types="Episode", **kwargs)
 
     def download_item(self, item: Item) -> bool:
-        dl_success = False
         method = f"/Items/{str(item.id)}/Download"
+        file_name = os.path.basename(item.path) if item.path is not "" else file_name = f"item_{str(item.id)}"
         try:
-            rsp = self.server_download_item(hdr=self.tokenHeader, method=method, local_filename=f"item_{str(item.id)}")
+            rsp = self.server_download_item(hdr=self.tokenHeader, method=method, local_filename=file_name)
         except Exception as inst:
             _log.critical(type(inst))
             _log.critical(inst.args)
             _log.critical(inst)
             _log.debug("Cannot download item from server: {server}".format(server=self.url))
 
-        return rsp
+        return file_name
 
     def getlibraryinfo(self):
         """
