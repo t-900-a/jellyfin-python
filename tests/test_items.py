@@ -306,7 +306,7 @@ class ItemTestCase(unittest.TestCase):
     def test_download_item(self, mock_get):
         mock_get.return_value.status_code = 200
         item_to_dl = Item(id=5)
-        download_rsp = self.testServer.download_item(item=item_to_dl)
+        download_rsp, content_type = self.testServer.download_item(item=item_to_dl)
         self.assertEqual(download_rsp, "item_5")
 
 

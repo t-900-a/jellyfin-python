@@ -307,7 +307,7 @@ class MediaServer(object):
             _log.critical(inst)
             _log.debug("Cannot download item from server: {server}".format(server=self.url))
 
-        return file_name
+        return file_name, rsp.headers['content-type']
 
     def getlibraryinfo(self):
         """
@@ -534,7 +534,7 @@ class MediaServer(object):
                     if chunk:  # filter out keep-alive new chunks
                         f.write(chunk)
                         # f.flush()
-        return local_filename
+            return r
 
     def server_deleterequest(self, hdr, method):
         hdr = {'accept': '*/*', **hdr}
