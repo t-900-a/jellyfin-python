@@ -287,6 +287,26 @@ class MediaServer(object):
             items.append(self.itemHelper.to_item_obj(dict_item=dict_item))
         return items
 
+    # TODO unit test
+    def get_item(self, item_id:int) -> Item:
+        """
+        Get items from server
+        Optional filters
+        """
+        method = f"/Items?Id={str(item_id)}"
+        dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
+        try:
+            dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot retrieve items from server: {server}".format(server=self.url))
+
+        for dict_item in dict_items['Items']:
+            item = self.itemHelper.to_item_obj(dict_item=dict_item)
+        return item
+
     def get_movies(self, **kwargs):
         return self.get_items(include_item_types="Movie", **kwargs)
 
