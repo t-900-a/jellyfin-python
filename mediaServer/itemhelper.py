@@ -12,7 +12,13 @@ class ItemHelper(object):
                              genres=dict_item.get('Genres'),
                              critic_rating=dict_item.get('CriticRating'),
                              official_rating=dict_item.get('OfficialRating'),
-                             production_year=dict_item.get('ProductionYear')
+                             production_year=dict_item.get('ProductionYear'),
+                             totalbitrate=dict_item.get("TotalBitrate"),
+                             width=dict_item.get("Width"),
+                             height=dict_item.get("Height"),
+                             size=dict_item.get("Size"),
+                             container=dict_item.get("Container"),
+                             premieredate=dict_item.get("PremiereDate")
                              )
 
         if dict_item['Type'] == 'Episode':
@@ -24,7 +30,13 @@ class ItemHelper(object):
                              genres=dict_item.get('Genres'),
                              critic_rating=dict_item.get('CriticRating'),
                              official_rating=dict_item.get('OfficialRating'),
-                             production_year=dict_item.get('ProductionYear')
+                             production_year=dict_item.get('ProductionYear'),
+                             totalbitrate=dict_item.get("TotalBitrate"),
+                             width=dict_item.get("Width"),
+                             height=dict_item.get("Height"),
+                             size=dict_item.get("Size"),
+                             container=dict_item.get("Container"),
+                             premieredate=dict_item.get("PremiereDate")
                              )
 
         if item_obj == None:

@@ -20,6 +20,15 @@ class Video(Item):
         self.critic_rating = kwargs.get("CriticRating")
         self.official_rating = kwargs.get("OfficialRating")
         self.production_year = kwargs.get("ProductionYear")
+        self.overview = kwargs.get("Overview")
+        self.studios = kwargs.get("Studios")
+        self.providerids = kwargs.get("ProviderIds")
+        self.totalbitrate = kwargs.get("TotalBitrate")
+        self.width = kwargs.get("Width")
+        self.height = kwargs.get("Height")
+        self.size = kwargs.get("Size")
+        self.container = kwargs.get("Container")
+        self.premieredate = kwargs.get("PremiereDate")
 
 class Movie(Video):
     def __init__(self, **kwargs):
