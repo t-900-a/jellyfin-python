@@ -12,7 +12,14 @@ class Item(object):
 
 class Video(Item):
     def __init__(self, **kwargs):
-        super().__init__(media_type="Video", is_folder=False, **kwargs)
+        super().__init__(media_type="Video", is_folder=False,
+                         id=kwargs.get("id"),name=kwargs.get("name"), item_type=kwargs.get("item_type"),
+                         path=kwargs.get("path"), date_created=kwargs.get("date_created"))
+        self.community_rating = kwargs.get("CommunityRating")
+        self.genre_items = kwargs.get("Genres")
+        self.critic_rating = kwargs.get("CriticRating")
+        self.official_rating = kwargs.get("OfficialRating")
+        self.production_year = kwargs.get("ProductionYear")
 
 class Movie(Video):
     def __init__(self, **kwargs):

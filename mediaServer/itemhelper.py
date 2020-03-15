@@ -7,14 +7,24 @@ class ItemHelper(object):
             item_obj = Movie(id=dict_item.get('Id'),
                              name=dict_item.get('Name'),
                              path=dict_item.get('Path'),
-                             date_created=dict_item.get('DateCreated')
+                             date_created=dict_item.get('DateCreated'),
+                             community_rating=dict_item.get('CommunityRating'),
+                             genres=dict_item.get('Genres'),
+                             critic_rating=dict_item.get('CriticRating'),
+                             official_rating=dict_item.get('OfficialRating'),
+                             production_year=dict_item.get('ProductionYear')
                              )
 
         if dict_item['Type'] == 'Episode':
             item_obj = Episode(id=dict_item.get('Id'),
                              name=dict_item.get('Name'),
                              path=dict_item.get('Path'),
-                             date_created=dict_item.get('DateCreated')
+                             date_created=dict_item.get('DateCreated'),
+                             community_rating=dict_item.get('CommunityRating'),
+                             genres=dict_item.get('Genres'),
+                             critic_rating=dict_item.get('CriticRating'),
+                             official_rating=dict_item.get('OfficialRating'),
+                             production_year=dict_item.get('ProductionYear')
                              )
 
         if item_obj == None:
