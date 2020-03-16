@@ -13,13 +13,16 @@ class ItemHelper(object):
                              critic_rating=dict_item.get('CriticRating'),
                              official_rating=dict_item.get('OfficialRating'),
                              production_year=dict_item.get('ProductionYear'),
-                             totalbitrate=dict_item.get("TotalBitrate"),
-                             width=dict_item.get("Width"),
-                             height=dict_item.get("Height"),
-                             size=dict_item.get("Size"),
+                             totalbitrate=dict_item.get("MediaSources")[0]['MediaStreams'][0]['BitRate'],
+                             width=dict_item.get("MediaSources")[0]['MediaStreams'][0]['Width'],
+                             height=dict_item.get("MediaSources")[0]['MediaStreams'][0]['Height'],
+                             size=dict_item.get("MediaSources")[0]['Size'],
+                             framerate=dict_item.get("MediaSources")[0]['MediaStreams'][0]['AverageFrameRate'],
+                             samplingrate=dict_item.get("MediaSources")[0]['MediaStreams'][1]['SampleRate'],
+                             channels=dict_item.get("MediaSources")[0]['MediaStreams'][1]['Channels'],
+                             duration_in_sec=dict_item.get("MediaSources")[0]['RunTimeTicks']*.0000001,
                              container=dict_item.get("Container"),
-                             premieredate=dict_item.get("PremiereDate"),
-                             mediasources=dict_item.get("MediaSources")
+                             premieredate=dict_item.get("PremiereDate")
                              )
 
         if dict_item['Type'] == 'Episode':
@@ -32,13 +35,16 @@ class ItemHelper(object):
                              critic_rating=dict_item.get('CriticRating'),
                              official_rating=dict_item.get('OfficialRating'),
                              production_year=dict_item.get('ProductionYear'),
-                             totalbitrate=dict_item.get("TotalBitrate"),
-                             width=dict_item.get("Width"),
-                             height=dict_item.get("Height"),
-                             size=dict_item.get("Size"),
+                             totalbitrate=dict_item.get("MediaSources")[0]['MediaStreams'][0]['BitRate'],
+                             width=dict_item.get("MediaSources")[0]['MediaStreams'][0]['Width'],
+                             height=dict_item.get("MediaSources")[0]['MediaStreams'][0]['Height'],
+                             size=dict_item.get("MediaSources")[0]['Size'],
+                             framerate=dict_item.get("MediaSources")[0]['MediaStreams'][0]['AverageFrameRate'],
+                             samplingrate=dict_item.get("MediaSources")[0]['MediaStreams'][1]['SampleRate'],
+                             channels=dict_item.get("MediaSources")[0]['MediaStreams'][1]['Channels'],
+                             duration_in_sec=dict_item.get("MediaSources")[0]['RunTimeTicks']*.0000001,
                              container=dict_item.get("Container"),
-                             premieredate=dict_item.get("PremiereDate"),
-                             mediasources=dict_item.get("MediaSources")
+                             premieredate=dict_item.get("PremiereDate")
                              )
 
         if item_obj == None:
