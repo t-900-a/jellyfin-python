@@ -299,6 +299,7 @@ class ItemTestCase(unittest.TestCase):
         mock_get.return_value.json.return_value = self.get_items_response
         self.items = self.testServer.get_items(recursive="true")
         self.assertIsInstance(self.items, list)
+        self.assertEqual(self.items[0].duration_in_sec, 596.458)
 
     @patch('mediaServer.server.requests.get')
     def test_download_item(self, mock_get):
