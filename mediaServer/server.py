@@ -293,7 +293,7 @@ class MediaServer(object):
         Get items from server
         Optional filters
         """
-        method = f"/Items?Id={str(item_id)}"
+        method = f"/Items?Ids={str(item_id)}"
         dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
         try:
             dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
