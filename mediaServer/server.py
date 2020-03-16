@@ -315,7 +315,7 @@ class MediaServer(object):
 
     def download_item(self, item: Item) -> bool:
         method = f"/Items/{str(item.id)}/Download"
-        if item.path is not "":
+        if item.path is not None:
             file_name = os.path.basename(item.path)
         else:
             file_name = f"item_{str(item.id)}"
