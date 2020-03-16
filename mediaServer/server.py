@@ -288,12 +288,12 @@ class MediaServer(object):
         return items
 
     # TODO unit test
-    def get_item(self, item_id:int) -> Item:
+    def get_item(self, item_id:int, fields=str('')) -> Item:
         """
         Get items from server
         Optional filters
         """
-        method = f"/Items?Fields=MediaSources&Ids={str(item_id)}"
+        method = f"/Items?Fields={fields}&Ids={str(item_id)}"
         dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
         try:
             dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)

@@ -302,6 +302,14 @@ class ItemTestCase(unittest.TestCase):
         self.assertEqual(self.items[0].duration_in_sec, 596.458)
 
     @patch('mediaServer.server.requests.get')
+    def test_get_items(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = self.get_items_response
+        self.item = self.testServer.get_item(item_id=5,fields="Path,MediaSources")
+        self.assertIsInstance(self.item, Item)
+        self.assertEqual(self.item.duration_in_sec, 596.458)
+
+    @patch('mediaServer.server.requests.get')
     def test_download_item(self, mock_get):
         mock_get.return_value.status_code = 200
         item_to_dl = Item(id=5)
