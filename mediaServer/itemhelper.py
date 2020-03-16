@@ -18,7 +18,8 @@ class ItemHelper(object):
                              height=dict_item.get("Height"),
                              size=dict_item.get("Size"),
                              container=dict_item.get("Container"),
-                             premieredate=dict_item.get("PremiereDate")
+                             premieredate=dict_item.get("PremiereDate"),
+                             mediasources=dict_item.get("MediaSources")
                              )
 
         if dict_item['Type'] == 'Episode':
@@ -36,7 +37,8 @@ class ItemHelper(object):
                              height=dict_item.get("Height"),
                              size=dict_item.get("Size"),
                              container=dict_item.get("Container"),
-                             premieredate=dict_item.get("PremiereDate")
+                             premieredate=dict_item.get("PremiereDate"),
+                             mediasources=dict_item.get("MediaSources")
                              )
 
         if item_obj == None:

@@ -29,6 +29,7 @@ class Video(Item):
         self.size = kwargs.get("Size")
         self.container = kwargs.get("Container")
         self.premieredate = kwargs.get("PremiereDate")
+        self.mediasources = kwargs.get("MediaSources")
 
 class Movie(Video):
     def __init__(self, **kwargs):
