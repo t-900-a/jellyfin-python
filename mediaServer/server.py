@@ -272,7 +272,7 @@ class MediaServer(object):
         Get items from server
         Optional filters
         """
-        method = f"/Items?Recursive={recursive}&IsHD={is_hd}&ArtistType={artist_type}&Fields={fields}&IncludeItemTypes={include_item_types}&SortBy={sort_by}&SortOrder={sort_order}"
+        method = f"/Items?Recursive={recursive}&IsHD={is_hd}&ArtistType={artist_type}&Fields={fields},MediaSources&IncludeItemTypes={include_item_types}&SortBy={sort_by}&SortOrder={sort_order}"
         dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)
         try:
             dict_items = self.server_getrequest(hdr=self.tokenHeader, method=method)

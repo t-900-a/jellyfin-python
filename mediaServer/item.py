@@ -33,6 +33,7 @@ class Video(Item):
         self.premieredate = kwargs.get("premiereDate")
         self.samplingrate = kwargs.get("samplingrate")
         self.framerate = kwargs.get("framerate")
+        self.lang = kwargs.get("lang")
 
 class Movie(Video):
     def __init__(self, **kwargs):

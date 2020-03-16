@@ -14,121 +14,119 @@ class ItemTestCase(unittest.TestCase):
     testServer = None
     items = None
 
-    get_items_response = {"Items": [
-                            {
-                              "Name": "root",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "1",
-                              "IsFolder": 'true',
-                              "Type": "AggregateFolder",
-                              "ImageTags": {},
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Media Folders",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "2",
-                              "IsFolder": 'true',
-                              "Type": "UserRootFolder",
-                              "ImageTags": {},
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "OpenSourceMovies",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "3",
-                              "IsFolder": 'true',
-                              "Type": "Folder",
-                              "ImageTags": {},
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Movies",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "f137a2dd21bbc1b99aa5c0f6bf02a805",
-                              "IsFolder": 'true',
-                              "Type": "CollectionFolder",
-                              "CollectionType": "movies",
-                              "ImageTags": {
-                                "Primary": "86f7e2545dbeb60b5ec19d883086a365"
-                              },
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Big Buck Bunny",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "5",
-                              "RunTimeTicks": 25000000,
-                              "IsFolder": 'false',
-                              "Type": "Movie",
-                              "ImageTags": {
-                                "Primary": "f6d517fe7402a4bbde69f36c16f672bf",
-                                "Logo": "a2f0e965628bc8a1d1087af522defa17"
-                              },
-                              "BackdropImageTags": [
-                                "606a215825d638a0c8eee975dd679b18"
-                              ],
-                              "MediaType": "Video"
-                            },
-                            {
-                              "Name": "Sacha Goedegebure",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "6",
-                              "Type": "Person",
-                              "ImageTags": {},
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Animation",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "7",
-                              "Type": "Genre",
-                              "ImageTags": {
-                                "Primary": "e97e63f9402c8192bb753cd10b5f92a5"
-                              },
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Comedy",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "8",
-                              "Type": "Genre",
-                              "ImageTags": {
-                                "Primary": "b0af96fe63612aa31ceaaed5875217ac"
-                              },
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Family",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "9",
-                              "Type": "Genre",
-                              "ImageTags": {
-                                "Primary": "275c8dec800e5c09b79ac5e232953a9b"
-                              },
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Blender Foundation",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "10",
-                              "Type": "Studio",
-                              "ImageTags": {},
-                              "BackdropImageTags": []
-                            },
-                            {
-                              "Name": "Live TV",
-                              "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
-                              "Id": "2b2bca16aacc8a14d53a11bb829eafa5",
-                              "IsFolder": 'true',
-                              "Type": "UserView",
-                              "CollectionType": "livetv",
-                              "ImageTags": {},
-                              "BackdropImageTags": []
-                            }
-                        ],
-                        "TotalRecordCount": 11
-                        }
+    get_items_response = {
+  "Items": [
+    {
+      "Name": "Big Buck Bunny",
+      "ServerId": "d7a01ad1589d43898592e6e91a674cc3",
+      "Id": "5",
+      "Container": "avi",
+      "MediaSources": [
+        {
+          "Protocol": "File",
+          "Id": "049829ec5c2f41a1e627c2f4d51d7e73",
+          "Path": "/media/Media/OpenSourceMovies/big_buck_bunny_480p_surround-fix.avi",
+          "Type": "Default",
+          "Container": "avi",
+          "Size": 220514438,
+          "Name": "big_buck_bunny_480p_surround-fix",
+          "IsRemote": False,
+          "RunTimeTicks": 5964580000,
+          "SupportsTranscoding": True,
+          "SupportsDirectStream": True,
+          "SupportsDirectPlay": True,
+          "IsInfiniteStream": False,
+          "RequiresOpening": False,
+          "RequiresClosing": False,
+          "RequiresLooping": False,
+          "SupportsProbing": False,
+          "MediaStreams": [
+            {
+              "Codec": "mpeg4",
+              "CodecTag": "FMP4",
+              "TimeBase": "1/24",
+              "CodecTimeBase": "1/24",
+              "VideoRange": "SDR",
+              "DisplayTitle": "480p MPEG4",
+              "IsInterlaced": False,
+              "BitRate": 2500431,
+              "RefFrames": 1,
+              "IsDefault": False,
+              "IsForced": False,
+              "Height": 480,
+              "Width": 854,
+              "AverageFrameRate": 24,
+              "RealFrameRate": 24,
+              "Profile": "Simple Profile",
+              "Type": "Video",
+              "AspectRatio": "16:9",
+              "Index": 0,
+              "IsExternal": False,
+              "IsTextSubtitleStream": False,
+              "SupportsExternalStream": False,
+              "Protocol": "File",
+              "PixelFormat": "yuv420p",
+              "Level": 1,
+              "IsAnamorphic": False
+            },
+            {
+              "Codec": "ac3",
+              "TimeBase": "1/56000",
+              "CodecTimeBase": "1/48000",
+              "DisplayTitle": "Dolby Digital 5.1",
+              "IsInterlaced": False,
+              "ChannelLayout": "5.1",
+              "BitRate": 448000,
+              "Channels": 6,
+              "SampleRate": 48000,
+              "IsDefault": False,
+              "IsForced": False,
+              "Type": "Audio",
+              "Index": 1,
+              "IsExternal": False,
+              "IsTextSubtitleStream": False,
+              "SupportsExternalStream": False,
+              "Protocol": "File",
+              "Level": 0
+            },
+            {
+              "Codec": "srt",
+              "Language": "eng",
+              "DisplayTitle": "English (SRT)",
+              "DisplayLanguage": "English",
+              "IsInterlaced": False,
+              "IsDefault": False,
+              "IsForced": False,
+              "Type": "Subtitle",
+              "Index": 2,
+              "IsExternal": True,
+              "IsTextSubtitleStream": True,
+              "SupportsExternalStream": True,
+              "Path": "/var/lib/emby/metadata/library/04/049829ec5c2f41a1e627c2f4d51d7e73/big_buck_bunny_480p_surround-fix.en.srt",
+              "Protocol": "File"
+            }
+          ],
+          "Formats": [],
+          "Bitrate": 2957650,
+          "RequiredHttpHeaders": {},
+          "ReadAtNativeFramerate": False
+        }
+      ],
+      "RunTimeTicks": 5964580000,
+      "IsFolder": False,
+      "Type": "Movie",
+      "ImageTags": {
+        "Primary": "f6d517fe7402a4bbde69f36c16f672bf",
+        "Logo": "a2f0e965628bc8a1d1087af522defa17"
+      },
+      "BackdropImageTags": [
+        "606a215825d638a0c8eee975dd679b18"
+      ],
+      "MediaType": "Video"
+    }
+  ],
+  "TotalRecordCount": 1
+}
 
     authenticateadminuserbyname_response = {"User":
                             {"Name":"MyEmbyUser",
