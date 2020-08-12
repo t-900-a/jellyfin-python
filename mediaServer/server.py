@@ -313,7 +313,7 @@ class MediaServer(object):
     def get_episodes(self, **kwargs):
         return self.get_items(include_item_types="Episode", **kwargs)
 
-    def download_item(self, item: Item) -> bool:
+    def download_item(self, item: Item) -> str:
         method = f"/Items/{str(item.id)}/Download"
         if item.path is not None:
             file_name = os.path.basename(item.path)
@@ -328,6 +328,22 @@ class MediaServer(object):
             _log.debug("Cannot download item from server: {server}".format(server=self.url))
 
         return file_name, rsp.headers['content-type']
+
+    def download_item_image(self, item: Item, image_type: str = 'Primary', width: int = 176, height: int = 264) -> str:
+        method = f"/Items/{str(item.id)}/Images/{image_type}"
+        if item.path is not None:
+            file_name = os.path.basename(item.path)
+        else:
+            file_name = f"item_image_{str(item.id)}"
+        try:
+            rsp = self.server_download_item(hdr=self.tokenHeader, method=method, local_filename=file_name)
+        except Exception as inst:
+            _log.critical(type(inst))
+            _log.critical(inst.args)
+            _log.critical(inst)
+            _log.debug("Cannot download item image from server: {server}".format(server=self.url))
+
+        return file_name
 
     def getlibraryinfo(self):
         """
