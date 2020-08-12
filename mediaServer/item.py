@@ -37,6 +37,7 @@ class Video(Item):
         self.channels = kwargs.get("channels")
         self.imdb_id = kwargs.get("imdb_id")
         self.tmdb_id = kwargs.get("tmdb_id")
+        self.description = kwargs.get("description")
 
 class Movie(Video):
     def __init__(self, **kwargs):

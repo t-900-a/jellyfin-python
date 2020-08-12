@@ -30,7 +30,8 @@ class ItemHelper(object):
                              premieredate=dict_item.get("PremiereDate"),
                              lang=mediastreams[0].get('Language'),
                              imdb_id=providers.get("Imdb"),
-                             tmdb_id=providers.get("Tmdb")
+                             tmdb_id=providers.get("Tmdb"),
+                             description=dict_item.get("Overview", None)
                              )
 
         if dict_item['Type'] == 'Episode':
@@ -60,7 +61,8 @@ class ItemHelper(object):
                                premieredate=dict_item.get("PremiereDate"),
                                lang=mediastreams[0].get('Language'),
                                imdb_id=dict_item.get("ProviderIds").get("Imdb"),
-                               tmdb_id=dict_item.get("ProviderIds").get("Tmdb")
+                               tmdb_id=dict_item.get("ProviderIds").get("Tmdb"),
+                               description=dict_item.get("Overview", None)
                                )
 
         if item_obj == None:
