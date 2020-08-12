@@ -331,10 +331,7 @@ class MediaServer(object):
 
     def download_item_image(self, item: Item, image_type: str = 'Primary', width: int = 176, height: int = 264) -> str:
         method = f"/Items/{str(item.id)}/Images/{image_type}"
-        if item.path is not None:
-            file_name = os.path.basename(item.path)
-        else:
-            file_name = f"item_image_{str(item.id)}"
+        file_name = f"item_image_{str(item.id)}"
         try:
             rsp = self.server_download_item(hdr=self.tokenHeader, method=method, local_filename=file_name)
         except Exception as inst:
